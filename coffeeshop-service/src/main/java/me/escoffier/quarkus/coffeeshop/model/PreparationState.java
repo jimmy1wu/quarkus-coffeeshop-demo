@@ -17,6 +17,13 @@ public class PreparationState {
         READY;
     }
 
+    public String toString() {
+        return "PreparationState\n"
+            + " - Beverage: " + beverage + "\n"
+            + " - Order: " + order + "\n"
+            + " - State: " + state;
+    }
+
     private static final Jsonb JSON = JsonbBuilder.create();
 
     public static String ready(Order order, Beverage beverage) {
@@ -24,7 +31,17 @@ public class PreparationState {
     }
 
     public static String queued(Order order) {
-        return JSON.toJson(new PreparationState().setOrder(order).setState(State.IN_QUEUE));
+        System.out.println("queued: Order = " + order);
+        PreparationState p = new PreparationState();
+        System.out.println("queued: p = " + p);
+        p = p.setOrder(order);
+        System.out.println("queued: p = " + p);
+        p = p.setState(State.IN_QUEUE);
+        System.out.println("queued: p = " + p);
+        String json = JSON.toJson(p);
+        System.out.println("queued: Result JSON: " + json);
+        //return JSON.toJson(.setOrder(order).setState(State.IN_QUEUE));
+        return json;
     }
 
     public static String underPreparation(Order order) {

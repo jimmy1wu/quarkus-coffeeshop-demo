@@ -45,9 +45,15 @@ public class CoffeeShopResource {
     @Path("/messaging")
     @POST
     public Order messaging(Order order) {
+        System.out.println("Order is: " + order);
         Order processed = process(order);
-        queue.send(getPreparationState(processed));
-        orders.send(toJson(processed));
+        System.out.println("Processed is: " + processed);
+        String preparationState = getPreparationState(processed);
+        System.out.println("preparationState is: " + preparationState);
+        queue.send(preparationState);
+        String json = toJson(processed);
+        System.out.println("json is: " + json);
+        orders.send(json);
         return processed;
     }
 

@@ -7,6 +7,9 @@ public class Beverage {
     private String preparedBy;
     private String orderId;
 
+    public String toString() {
+        return "beverage: " + beverage + ", customer: " + customer + ", preparedBy: " + preparedBy + ", orderId: " + orderId;
+    }
 
     public Beverage() {
 

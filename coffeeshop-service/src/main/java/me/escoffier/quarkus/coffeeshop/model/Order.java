@@ -6,6 +6,10 @@ public class Order {
     private String name;
     private String orderId;
 
+    public String toString() {
+        return "product: " + product + ", name: " + name + ", orderId: " + orderId;
+    }
+
     public String getProduct() {
         return product;
     }
