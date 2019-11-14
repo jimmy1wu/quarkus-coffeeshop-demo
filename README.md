@@ -123,3 +123,15 @@ http POST :8080/messaging product=mocha name=flore
 ```
 
 The dashboard shows that the load is dispatched among the baristas.
+
+# Dave's instructions
+```bash
+docker-compose up
+create-topics
+docker build -t coffeeshop-service -f Dockerfile-coffeeshop .
+docker build -t coffeeshop-http -f Dockerfile-http .
+docker build -t barista-kafka -f Dockerfile-barista .
+docker run -it --rm -p 8080:8080 --network quarkus-coffeeshop-demo_default coffeeshop-service
+docker run -it --rm --network quarkus-coffeeshop-demo_default --name barista-http coffeeshop-http
+docker run -it --rm --network quarkus-coffeeshop-demo_default barista-kafka
+```
