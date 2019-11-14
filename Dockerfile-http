@@ -1,0 +1,19 @@
+## Maven package
+FROM quay.io/quarkus/centos-quarkus-maven:19.2.1 AS build
+
+COPY . /project
+WORKDIR /project
+USER root
+RUN chown -R quarkus *
+USER quarkus 
+
+# Compile project
+RUN mvn clean package
+
+# Build image containing only the output jar
+FROM quay.io/quarkus/centos-quarkus-maven:19.2.1
+
+COPY --from=build /project/barista-http/target /project
+WORKDIR /project
+
+CMD ["java", "-Dbarista.name=tom", "-jar", "barista-http-1.0-SNAPSHOT-runner.jar"]

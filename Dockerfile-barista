@@ -1,0 +1,30 @@
+## Maven package
+FROM quay.io/quarkus/centos-quarkus-maven:19.2.1 AS build
+
+WORKDIR /project
+
+# Download dependencies
+RUN mkdir barista-kafka
+COPY barista-kafka/pom.xml barista-kafka/
+COPY pom.xml .
+RUN mvn -f barista-kafka/pom.xml dependency:resolve
+
+# Compile project
+COPY barista-kafka/src/main/java barista-kafka/src/main/java
+RUN mvn -f barista-kafka/pom.xml -Pnative package
+
+COPY barista-kafka/src/main/resources barista-kafka/src/main/resources
+RUN mvn -f barista-kafka/pom.xml -Pnative package
+
+## Create Image
+FROM registry.access.redhat.com/ubi8/ubi-minimal
+
+WORKDIR /work/
+COPY --from=build /project/barista-kafka/target/*-runner /work/application
+RUN chmod 775 /work
+
+EXPOSE 8090
+
+ENV BARISTA="default"
+
+CMD ["./application", "-Dbarista.name=${BARISTA}", "-Dquarkus.http.host=0.0.0.0", "-Dkafka.bootstrap.servers=kafka:9093"]

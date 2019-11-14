@@ -1,0 +1,27 @@
+## Maven package
+FROM quay.io/quarkus/centos-quarkus-maven:19.2.1
+
+WORKDIR /project
+
+# Download dependencies
+RUN mkdir coffeeshop-service
+COPY coffeeshop-service/src coffeeshop-service/src
+COPY coffeeshop-service/pom.xml coffeeshop-service/pom.xml
+COPY pom.xml .
+
+WORKDIR /project/coffeeshop-service
+
+# Compile project
+RUN mvn compile
+
+EXPOSE 8080
+
+WORKDIR /project
+RUN mkdir barista-kafka
+RUN mkdir barista-http
+COPY barista-kafka/pom.xml barista-kafka/pom.xml
+COPY barista-http/pom.xml barista-http/pom.xml
+
+WORKDIR /project/coffeeshop-service
+
+CMD ["mvn", "compile", "quarkus:dev", "-Dquarkus.http.host=0.0.0.0", "-Dkafka.bootstrap.servers=kafka:9093", "-Dme.escoffier.quarkus.coffeeshop.http.BaristaService/mp-rest/url=http://barista-http:8082"]
