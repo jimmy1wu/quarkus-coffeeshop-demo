@@ -123,3 +123,36 @@ http POST :8080/messaging product=mocha name=flore
 ```
 
 The dashboard shows that the load is dispatched among the baristas.
+
+# Instructions to run in containers
+
+1. Run Kafka
+    ```bash
+    docker-compose up
+    ```
+1. Build Docker Images
+    * Barista-Kafka
+    ```bash
+    docker build -f barista-kafka/Dockerfile . -t barista-kafka
+    ```
+    * Barista-HTTP
+    ```bash
+    docker build -f barista-http/Dockerfile . -t barista-http
+    ```
+    * Coffeeshop-Service
+    ```bash
+    docker build -f coffeeshop-service/Dockerfile . -t coffeeshop-service
+    ```
+1. Run Docker Images
+    * Barista-Kafka
+    ```bash
+    docker run -i --rm -p 8090:8090 --name barista-kafka_1 --network quarkus-coffeeshop-demo_default barista-kafka
+    ```
+    * Barista-HTTP
+    ```bash
+    docker run -i --rm -p 8082:8082 --name barista-http_1 --network quarkus-coffeeshop-demo_default barista-http
+    ```
+    * Coffeeshop-Service
+    ```bash
+    docker run -i --rm -p 8080:8080 --name coffeeshop-service_1 --network quarkus-coffeeshop-demo_default coffeeshop-service
+    ```
