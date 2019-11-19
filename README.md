@@ -126,65 +126,51 @@ The dashboard shows that the load is dispatched among the baristas.
 
 # Instructions to run containers using Docker
 
-1. Run Kafka
+1. Build docker images
+    ```bash
+    ./build.bat
+    ```
+    or 
+    ```bash
+    ./build.sh
+    ```
+1. Run docker containers
     ```bash
     docker-compose up
     ```
-1. Build Docker Images
-    * Barista-Kafka
+1. Clean up docker
     ```bash
-    docker build -f barista-kafka/Dockerfile . -t barista-kafka
-    ```
-    * Barista-HTTP
-    ```bash
-    docker build -f barista-http/Dockerfile . -t barista-http
-    ```
-    * Coffeeshop-Service
-    ```bash
-    docker build -f coffeeshop-service/Dockerfile . -t coffeeshop-service
-    ```
-1. Run Docker Images
-    * Barista-Kafka
-    ```bash
-    docker run -i --rm -p 8090:8090 --name barista-kafka_1 --network quarkus-coffeeshop-demo_default barista-kafka
-    ```
-    * Barista-HTTP
-    ```bash
-    docker run -i --rm -p 8082:8082 --name barista-http_1 --network quarkus-coffeeshop-demo_default barista-http
-    ```
-    * Coffeeshop-Service
-    ```bash
-    docker run -i --rm -p 8080:8080 --name coffeeshop-service_1 --network quarkus-coffeeshop-demo_default coffeeshop-service
+    docker-compose down
     ```
 
 # Instructions to run containers using Kubernetes
 
-1. Build Docker Images
-    * Barista-Kafka
+1. Build docker images
     ```bash
-    docker build -f barista-kafka/Dockerfile . -t barista-kafka
+    ./build.bat
     ```
-    * Barista-HTTP
+    or 
     ```bash
-    docker build -f barista-http/Dockerfile . -t barista-http
+    ./build.sh
     ```
-    * Coffeeshop-Service
+1. Run the kubernetes deployments and services
     ```bash
-    docker build -f coffeeshop-service/Dockerfile . -t coffeeshop-service
+    ./apply-kubernetes.bat
     ```
-1. Run zookeeper and kafka server
+    or
     ```bash
-    kubectl apply -f zookeeper-deployment.yaml
-    kubectl apply -f zookeeper-service.yaml
-    kubectl apply -f kafka-deployment.yaml
-    kubectl apply -f kafka-service.yaml
+    ./apply-kubernetes.sh
     ```
-1. Run services
+1. Expose the coffeeshop-service to be accessible externally
     ```bash
-    kubectl apply -f barista-kafka/deployment.yml
-    kubectl apply -f barista-kafka/service.yml
-    kubectl apply -f coffeeshop-service/deployment.yml
-    kubectl apply -f coffeeshop-service/service.yml
-    kubectl apply -f barista-http/deployment.yml
-    kubectl apply -f barista-http/service.yml
+    kubectl port-forward <COFFEESHOP POD> 8080:8080
+
+    ```
+1. Clean up kubernetes resource when done
+    ```bash
+    ./delete-kubernetes.bat
+    ```
+    or
+    ```bash
+    ./delete-kubernetes.sh
     ```
