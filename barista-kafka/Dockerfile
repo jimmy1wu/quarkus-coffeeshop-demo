@@ -28,4 +28,4 @@ WORKDIR /project
 
 EXPOSE 8090
 
-CMD ["java", "-Dkafka.bootstrap.servers=kafka:9093", "-jar", "app.jar"]
+CMD ["java", "-Dkafka.bootstrap.servers=kafka-cluster-kafka-bootstrap:9092", "-jar", "app.jar"]
