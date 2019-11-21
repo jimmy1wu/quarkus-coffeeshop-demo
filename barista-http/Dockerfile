@@ -25,9 +25,7 @@ FROM open-liberty
 
 # Copy app binaries
 
-USER root
-
-COPY --from=build  /project/barista-http/target/barista-http-1.0-SNAPSHOT.war /opt/ol/wlp/usr/servers/defaultServer/apps
-COPY --from=build  /project/barista-http/src/main/liberty/config/server.xml /opt/ol/wlp/usr/servers/defaultServer
+COPY --from=build --chown=1001:0 /project/barista-http/target/barista-http-1.0-SNAPSHOT.war /opt/ol/wlp/usr/servers/defaultServer/apps
+COPY --from=build --chown=1001:0 /project/barista-http/src/main/liberty/config/server.xml /opt/ol/wlp/usr/servers/defaultServer
 
 EXPOSE 8082
