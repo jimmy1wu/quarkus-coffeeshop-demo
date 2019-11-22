@@ -19,12 +19,12 @@ public class KafkaBarista {
     @ConfigProperty(name = "barista.name")
     String name;
 
-    private Jsonb jsonb = JsonbBuilder.create();
     private Random random = new Random();
-
+    
     @Incoming("orders")
     @Outgoing("queue")
     public CompletionStage<String> prepare(String message) {
+        Jsonb jsonb = JsonbBuilder.create();
         Order order = jsonb.fromJson(message, Order.class);
         System.out.println("Barista " + name + " is going to prepare a " + order.getProduct());
         return makeIt(order)
