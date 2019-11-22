@@ -124,58 +124,7 @@ http POST :8080/messaging product=mocha name=flore
 
 The dashboard shows that the load is dispatched among the baristas.
 
-# Instructions to run containers using Docker
-
-1. Build docker images
-    ```bash
-    ./build.bat
-    ```
-    or 
-    ```bash
-    ./build.sh
-    ```
-1. Run docker containers
-    ```bash
-    docker-compose up
-    ```
-1. Clean up docker
-    ```bash
-    docker-compose down
-    ```
-
-# Instructions to run containers using Kubernetes
-
-1. Build docker images
-    ```bash
-    ./build.bat
-    ```
-    or 
-    ```bash
-    ./build.sh
-    ```
-1. Run the kubernetes deployments and services
-    ```bash
-    ./apply-kubernetes.bat
-    ```
-    or
-    ```bash
-    ./apply-kubernetes.sh
-    ```
-1. Expose the coffeeshop-service to be accessible externally
-    ```bash
-    kubectl port-forward <COFFEESHOP POD> 8080:8080
-
-    ```
-1. Clean up kubernetes resource when done
-    ```bash
-    ./delete-kubernetes.bat
-    ```
-    or
-    ```bash
-    ./delete-kubernetes.sh
-    ```
-
-# Instructions to run containers using Kubernetes and Strimzi operators
+# Instructions to run containers using Kubernetes, Strimzi operators and Keda
 
 1. Build docker images
     ```bash
@@ -201,10 +150,17 @@ The dashboard shows that the load is dispatched among the baristas.
     ```bash
     ./apply-kubernetes.sh
     ```
+1. Start Keda
+    ```bash
+    ./start-keda.bat
+    ```
+    or
+    ```bash
+    ./start-keda.sh
+    ```
 1. Expose the coffeeshop-service to be accessible externally
     ```bash
-    kubectl port-forward <COFFEESHOP POD> 8080:8080
-
+    kubectl port-forward service/coffeeshop-service 8080:8080 -n coffeeshop-demo
     ```
 1. Clean up kubernetes resource when done
     ```bash
