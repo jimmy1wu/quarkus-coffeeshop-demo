@@ -2,6 +2,7 @@ package me.escoffier.quarkus.coffeeshop;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -20,6 +21,7 @@ public class BaristaResource {
 
     private Random random = new Random();
 
+    @Inject
     @ConfigProperty(name = "barista.name")
     String name;
 
