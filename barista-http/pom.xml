@@ -42,78 +42,6 @@
     </dependencies>
 
     <build>
-            <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>net.wasdev.wlp.maven.plugins</groupId>
-                    <artifactId>liberty-maven-plugin</artifactId>
-                    <version>2.7</version>
-                    <configuration>
-                        <!-- set install-apps goal parameters -->
-                        <looseApplication>true</looseApplication>
-                        <installAppPackages>project</installAppPackages>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>stop-server-before-clean</id>
-                            <phase>pre-clean</phase>
-                            <goals>
-                                <goal>stop-server</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>create-server</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>install-server</goal>
-                                <goal>create-server</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>install-feature</id>
-                            <phase>prepare-package</phase>
-                            <goals>
-                              <goal>install-feature</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>target/liberty-alt-output-dir</outputDirectory>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>install-apps</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>install-apps</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>package-server</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>package-server</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>target/liberty-alt-output-dir</outputDirectory>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>test-start-server</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>test-start-server</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>test-stop-server</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>test-stop-server</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -134,10 +62,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
-                <version>2.7</version>
-
+                <version>3.1</version>
                 <configuration>
                     <assemblyArtifact>
                         <groupId>io.openliberty</groupId>
@@ -145,6 +72,10 @@
                         <version>RELEASE</version>
                         <type>zip</type>
                     </assemblyArtifact>
+                    <serverName>defaultServer</serverName>
+                    <stripVersion>true</stripVersion>
+                    <configFile>src/main/liberty/config/server.xml</configFile>
+                    <looseApplication>true</looseApplication>
                     <packageFile>
                         ${project.build.directory}/barista-http.tar.gz
                     </packageFile>
