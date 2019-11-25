@@ -15,6 +15,19 @@
     <packaging>war</packaging>
 
     <dependencies>
+        <!-- Open Liberty Features -->
+        <dependency>
+            <groupId>io.openliberty.features</groupId>
+            <artifactId>microProfile-3.0</artifactId>
+            <version>19.0.0.11</version>
+            <type>esa</type>
+        </dependency>
+        <dependency>
+            <groupId>io.openliberty.features</groupId>
+            <artifactId>mpReactiveMessaging-1.0</artifactId>
+            <version>19.0.0.11</version>
+            <type>esa</type>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
             <artifactId>microprofile-config-api</artifactId>
@@ -25,6 +38,12 @@
             <groupId>org.eclipse.microprofile.reactive.messaging</groupId>
             <artifactId>microprofile-reactive-messaging-api</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+         <dependency>
+            <groupId>org.eclipse.microprofile.health</groupId>
+            <artifactId>microprofile-health-api</artifactId>
+            <version>2.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -83,53 +102,24 @@
                     </systemProperties>
                 </configuration>
             </plugin>
+            <plugin>
+               <groupId>io.openliberty.tools</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <assemblyArtifact>
+                        <groupId>io.openliberty</groupId>
+                        <artifactId>openliberty-runtime</artifactId>
+                        <version>RELEASE</version>
+                        <type>zip</type>
+                    </assemblyArtifact>
+                    <serverName>defaultServer</serverName>
+                    <stripVersion>true</stripVersion>
+                    <configFile>src/main/liberty/config/server.xml</configFile>
+                    <looseApplication>true</looseApplication>
+                    <packageFile> ${project.build.directory}/barista-kafka.tar.gz</packageFile>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>native</id>
-            <activation>
-                <property>
-                    <name>native</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>io.quarkus</groupId>
-                        <artifactId>quarkus-maven-plugin</artifactId>
-                        <version>${quarkus.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>native-image</goal>
-                                </goals>
-                                <configuration>
-                                    <enableHttpUrlHandler>true</enableHttpUrlHandler>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>${surefire-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                                <configuration>
-                                    <systemProperties>
-                                        <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
-                                    </systemProperties>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-    
 </project>
