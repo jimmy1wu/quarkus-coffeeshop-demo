@@ -2,7 +2,6 @@
 
   <featureManager>
     <feature>microProfile-3.0</feature>
-    <feature>mpReactiveMessaging-1.0</feature>
   </featureManager>
 
   <httpEndpoint httpPort="8080" id="defaultHttpEndpoint" host="*" />
