@@ -123,3 +123,15 @@ http POST :8080/messaging product=mocha name=flore
 ```
 
 The dashboard shows that the load is dispatched among the baristas.
+
+# Instructions to run in containers
+
+1. Build Docker Images
+   Use the following script to build the Docker images for the three microservices:
+    ```bash
+    ./build.sh
+    ```
+1. Run Kafka and the microservices together using Docker Compose:
+    ```bash
+    docker-compose up
+    ```
