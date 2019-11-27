@@ -29,3 +29,5 @@ COPY --from=build --chown=1001:0 /project/barista-http/target/barista-http-1.0-S
 COPY --from=build --chown=1001:0 /project/barista-http/src/main/liberty/config/server.xml /opt/ol/wlp/usr/servers/defaultServer
 
 EXPOSE 8082
+
+# We inherit the CMD to start the Liberty server from the open-liberty image
