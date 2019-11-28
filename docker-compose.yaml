@@ -41,7 +41,7 @@ services:
   barista-kafka:
       image: barista-kafka
       command: [
-          "java", "-Dkafka.bootstrap.servers=kafka:9093", "-jar", "app.jar"
+          "/opt/ol/wlp/bin/server", "run", "defaultServer", "-Dmp.messaging.connector.liberty-kafka.bootstrap.servers=kafka:9093"
       ]
       depends_on:
           - kafka
@@ -73,10 +73,22 @@ services:
           - coffeeshop-service
       command: >
         /bin/bash -c "
-          while ! curl -sI http://coffeeshop-service:8080;
+          while ! curl -s http://barista-http:8082/health/ready | grep '\"BaristaReadinessCheck\",\"status\":\"UP\"' ;
           do
-            echo sleeping;
+            echo Waiting for barista-http;
             sleep 1;
           done;
-          echo Connected!;
+          echo barista-http is ready!;
+          while ! curl -s http://barista-kafka:8090/health/ready |grep '\"BaristaReadinessCheck\",\"status\":\"UP\"' ;
+          do
+            echo Waiting for barista-kafka;
+            sleep 1;
+          done;
+          echo barista-kafka is ready!;
+          while ! curl -sI http://coffeeshop-service:8080;
+          do
+            echo Waiting for coffeeshop-service;
+            sleep 1;
+          done;
+          echo coffesshop-service is ready!;
         "

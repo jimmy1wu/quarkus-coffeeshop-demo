@@ -28,4 +28,4 @@ COPY --from=build --chown=1001:0 /project/barista-kafka/src/main/liberty/config/
 
 EXPOSE 8090
 
-CMD ["/opt/ol/wlp/bin/server", "run", "defaultServer", "-Dkafka.bootstrap.servers=kafka-cluster-kafka-bootstrap:9092"]
+# We inherit the CMD to start Liberty from the open-liberty image.
