@@ -1,0 +1,14 @@
+<server description="Sample Liberty server">
+
+  <featureManager>
+    <feature>microProfile-3.0</feature>
+    <feature>mpReactiveMessaging-1.0</feature>
+  </featureManager>
+
+  <httpEndpoint httpPort="8090" id="defaultHttpEndpoint" host="*" />
+
+  <webApplication location="barista-kafka-1.0-SNAPSHOT.war" contextRoot="/">
+
+  </webApplication>
+
+</server>
