@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -x
 
 # Test POSTing an order
 response=`curl -s -d"{\"name\":\"Travis\",\"product\":\"frappuccino\"}" -H "Content-Type: application/json" http://localhost:8080/messaging`
