@@ -21,5 +21,6 @@ if [[ "$eventStream" =~ $responseRegex ]]; then
   echo "Order was successfully processed"
 else
   echo "Order completion not detected"
+  docker-comopse logs barista-kafka
   false
 fi
