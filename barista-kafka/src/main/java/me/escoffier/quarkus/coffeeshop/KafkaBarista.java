@@ -7,6 +7,8 @@ import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import javax.inject.Inject;
+
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -16,15 +18,16 @@ import java.util.concurrent.Executors;
 @ApplicationScoped
 public class KafkaBarista {
 
+    @Inject
     @ConfigProperty(name = "barista.name")
     String name;
 
-    private Jsonb jsonb = JsonbBuilder.create();
     private Random random = new Random();
-
+    
     @Incoming("orders")
     @Outgoing("queue")
     public CompletionStage<String> prepare(String message) {
+        Jsonb jsonb = JsonbBuilder.create();
         Order order = jsonb.fromJson(message, Order.class);
         System.out.println("Barista " + name + " is going to prepare a " + order.getProduct());
         return makeIt(order)
