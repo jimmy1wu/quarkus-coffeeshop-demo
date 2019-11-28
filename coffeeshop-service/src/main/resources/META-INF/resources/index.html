@@ -101,7 +101,7 @@
         }
 
         event.preventDefault(); //prevent default action 
-        var post_url = "/" + method; //get form action url
+        var post_url = "/services/" + method; //get form action url
         var request_method = "POST"; //get form GET/POST method
         
         $.ajax({
@@ -130,7 +130,7 @@
     });
 
     $(function () {
-        var source = new EventSource("http://localhost:8080/queue");
+        var source = new EventSource("http://localhost:8080/services/queue");
         source.onmessage = function(e) {
             console.log(e);
             var state = JSON.parse(e.data);
