@@ -14,7 +14,7 @@ else
 fi
 
 # Test order completion
-eventStream=`curl -s --max-time 5.5 http://localhost:8080/queue | grep 'data'`
+eventStream=`curl -s --max-time 10 http://localhost:8080/queue | grep 'data'`
 responseRegex='"state" *: *"READY"'
 
 if [[ "$eventStream" =~ $responseRegex ]]; then

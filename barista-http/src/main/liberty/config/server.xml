@@ -1,0 +1,13 @@
+<server description="Sample Liberty server">
+
+  <featureManager>
+    <feature>microProfile-3.0</feature>
+  </featureManager>
+
+  <httpEndpoint httpPort="8082" id="defaultHttpEndpoint" host="*" />
+
+  <webApplication location="barista-http-1.0-SNAPSHOT.war" contextRoot="/">
+
+  </webApplication>
+
+</server>
