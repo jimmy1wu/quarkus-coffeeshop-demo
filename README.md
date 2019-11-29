@@ -124,14 +124,54 @@ http POST :8080/messaging product=mocha name=flore
 
 The dashboard shows that the load is dispatched among the baristas.
 
-# Instructions to run in containers
+# Instructions to run containers using Docker
 
 1. Build Docker Images
    Use the following script to build the Docker images for the three microservices:
+    ```bash
+    ./build.bat
+    ```
+    or 
     ```bash
     ./build.sh
     ```
 1. Run Kafka and the microservices together using Docker Compose:
     ```bash
     docker-compose up
+    ```
+1. Clean up docker
+    ```bash
+    docker-compose down
+    ```
+
+# Instructions to run containers using Kubernetes
+
+1. Build docker images
+    ```bash
+    ./build.bat
+    ```
+    or 
+    ```bash
+    ./build.sh
+    ```
+1. Run the kubernetes deployments and services
+    ```bash
+    ./apply-kubernetes.bat
+    ```
+    or
+    ```bash
+    ./apply-kubernetes.sh
+    ```
+1. Expose the coffeeshop-service to be accessible externally
+    ```bash
+    kubectl port-forward <COFFEESHOP POD> 8080:8080
+
+    ```
+1. Clean up kubernetes resource when done
+    ```bash
+    ./delete-kubernetes.bat
+    ```
+    or
+    ```bash
+    ./delete-kubernetes.sh
     ```
