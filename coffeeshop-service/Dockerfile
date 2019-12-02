@@ -28,3 +28,4 @@ COPY --from=build --chown=1001:0 /project/coffeeshop-service/src/main/liberty/co
 
 EXPOSE 8080
 
+CMD ["/opt/ol/wlp/bin/server", "run", "defaultServer", "-Dmp.messaging.connector.liberty-kafka.bootstrap.servers=kafka-cluster-kafka-bootstrap:9092"]

@@ -3,6 +3,7 @@
   <featureManager>
     <feature>microProfile-3.0</feature>
     <feature>mpReactiveMessaging-1.0</feature>
+    <feature>mpReactiveStreams-1.0</feature>
   </featureManager>
 
   <httpEndpoint httpPort="8080" id="defaultHttpEndpoint" host="*" />
@@ -11,4 +12,9 @@
 
   </webApplication>
 
+  <logging  traceSpecification="REACTIVEMESSAGE=all:org.apache.kafka.*=all"
+traceFileName="trace.log"
+maxFileSize="20"
+maxFiles="10"
+traceFormat="BASIC" />
 </server>

@@ -24,6 +24,12 @@
       <type>esa</type>
     </dependency>
     <dependency>
+      <groupId>io.openliberty.features</groupId>
+      <artifactId>mpReactiveStreams-1.0</artifactId>
+      <version>19.0.0.11</version>
+      <type>esa</type>
+    </dependency>
+    <dependency>
       <groupId>org.eclipse.microprofile.config</groupId>
       <artifactId>microprofile-config-api</artifactId>
       <version>1.3</version>
@@ -36,10 +42,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>io.smallrye.reactive</groupId>
-      <artifactId>smallrye-reactive-messaging-provider</artifactId>
-      <version>1.0.8</version>
-    </dependency>
+      <groupId>org.eclipse.microprofile.reactive-streams-operators</groupId>
+      <artifactId>microprofile-reactive-streams-operators-api</artifactId>
+      <version>1.0.1</version>
+      <scope>provided</scope>
+  </dependency>
 
     <dependency>
       <groupId>org.eclipse.microprofile.health</groupId>
@@ -75,11 +82,13 @@
       <version>2.3.0</version>
     </dependency>
     <!-- Required by kafka connector -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.25</version>
-    </dependency>
+  <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-jdk14</artifactId>
+    <version>1.7.25</version>
+  </dependency>
+  
+  
   </dependencies>
   <build>
     <plugins>
@@ -106,19 +115,7 @@
         <artifactId>liberty-maven-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-            <assemblyArtifact>
-                <groupId>io.openliberty</groupId>
-                <artifactId>openliberty-runtime</artifactId>
-                <version>RELEASE</version>
-                <type>zip</type>
-            </assemblyArtifact>
             <serverName>defaultServer</serverName>
-            <stripVersion>true</stripVersion>
-            <configFile>src/main/liberty/config/server.xml</configFile>
-            <looseApplication>true</looseApplication>
-            <packageFile>
-                ${project.build.directory}/coffeeshop-service.tar.gz
-            </packageFile>
         </configuration>
     </plugin>
     </plugins>
