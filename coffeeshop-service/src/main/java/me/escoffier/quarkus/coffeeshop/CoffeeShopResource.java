@@ -4,6 +4,7 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.ws.rs.Consumes;
@@ -27,15 +28,17 @@ import me.escoffier.quarkus.coffeeshop.model.PreparationState;
 @Path("/")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@ApplicationScoped
 public class CoffeeShopResource {
-
+    private static Logger logger = LoggerFactory.getLogger(CoffeeShopResource.class);
+    
     @Inject
     Jsonb jsonb;
 
-    @Inject
-    @RestClient
-    BaristaService barista;
-
+    // @Inject
+    // @RestClient
+    // BaristaService barista;
+    
     class EventProducer {
 
         private BlockingQueue<String> buffer;
@@ -49,6 +52,7 @@ public class CoffeeShopResource {
         String nextEvent() {
             String event;
             try {
+                logger.info("Producer: " + name + " asked for next event");
                 event = buffer.take();
                 logger.info("Producer: " + name + " Returning event: " + event);
                 return event;
@@ -67,15 +71,14 @@ public class CoffeeShopResource {
     private EventProducer queueBuffer = new EventProducer("queue");
     private EventProducer orderBuffer = new EventProducer("orders");
 
-    private static Logger logger = LoggerFactory.getLogger(CoffeeShopResource.class);
     
-    @POST
-    @Path("/http")
-    public Beverage http(final Order order) {
-        return barista.order(order.setOrderId(UUID.randomUUID().toString()));
-    }
+    // @POST
+    // @Path("/http")
+    // public Beverage http(final Order order) {
+    //     //return barista.order(order.setOrderId(UUID.randomUUID().toString()));
+    // }
 
-    @Path("/messaging")
+    @Path("/messaging")  
     @POST
     public Order messaging(final Order order) {
         final Order processed = process(order);
@@ -90,7 +93,7 @@ public class CoffeeShopResource {
        return ReactiveStreams.generate(() -> queueBuffer.nextEvent());
     }
 
-    @Outgoing("orders")
+    @Outgoing("orders") 
     public PublisherBuilder<String> sendOrder() {
         return ReactiveStreams.generate(() -> orderBuffer.nextEvent());
     }
