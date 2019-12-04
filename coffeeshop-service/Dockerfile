@@ -12,13 +12,13 @@ COPY coffeeshop-service/pom.xml /project/coffeeshop-service/pom.xml
 COPY pom.xml /project/
 
 # Download dependencies
-RUN mvn -f coffeeshop-service/pom.xml clean dependency:resolve
+RUN mvn -q -f coffeeshop-service/pom.xml clean dependency:resolve
 
 # Copy application sources
 COPY coffeeshop-service/src /project/coffeeshop-service/src
 
 # Build and package
-RUN mvn -f coffeeshop-service/pom.xml package
+RUN mvn -q -f coffeeshop-service/pom.xml package
 
 ## Create runtime Image
 FROM open-liberty
@@ -28,4 +28,4 @@ COPY --from=build --chown=1001:0 /project/coffeeshop-service/src/main/liberty/co
 
 EXPOSE 8080
 
-CMD ["/opt/ol/wlp/bin/server", "run", "defaultServer", "-Dmp.messaging.connector.liberty-kafka.bootstrap.servers=kafka-cluster-kafka-bootstrap:9092"]
+# We inherit the CMD to start Liberty from the open-liberty image

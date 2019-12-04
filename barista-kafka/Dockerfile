@@ -11,18 +11,22 @@ WORKDIR /project
 COPY barista-kafka/pom.xml /project/barista-kafka/pom.xml
 COPY pom.xml /project/
 
+# Download dependencies
+RUN mvn -q -f barista-kafka/pom.xml clean dependency:resolve
+
 # Copy application sources
 COPY barista-kafka/src /project/barista-kafka/src
 
 # Build and package
-RUN mvn -f barista-kafka/pom.xml package
+RUN mvn -q -f barista-kafka/pom.xml package
 
 ## Create Image
 FROM open-liberty
 
 COPY --from=build --chown=1001:0 /project/barista-kafka/target/barista-kafka-1.0-SNAPSHOT.war /opt/ol/wlp/usr/servers/defaultServer/apps
 COPY --from=build --chown=1001:0 /project/barista-kafka/src/main/liberty/config/server.xml /opt/ol/wlp/usr/servers/defaultServer
+COPY barista-kafka/barista-name.sh /tmp
 
 EXPOSE 8090
 
-CMD ["/opt/ol/wlp/bin/server", "run", "defaultServer", "-Dkafka.bootstrap.servers=kafka-cluster-kafka-bootstrap:9092"]
+# We inherit the CMD to start Liberty from the open-liberty image.

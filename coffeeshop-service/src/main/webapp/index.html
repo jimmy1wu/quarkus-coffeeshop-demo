@@ -130,7 +130,7 @@
     });
 
     $(function () {
-        var websocket = new WebSocket("ws://localhost:8080/services/queue");
+        var websocket = new WebSocket("ws://" + window.location.host + "/services/queue");
         websocket.onmessage = function(e) {
             console.log(e);
             var state = JSON.parse(e.data);

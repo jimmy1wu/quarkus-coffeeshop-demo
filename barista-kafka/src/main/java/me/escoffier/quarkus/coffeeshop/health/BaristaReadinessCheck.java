@@ -1,18 +1,16 @@
 package me.escoffier.quarkus.coffeeshop.health;
 
-import java.util.Map;
+import java.util.Collection;
 import java.util.Properties;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.ListTopicsResult;
+import org.apache.kafka.clients.admin.ConsumerGroupListing;
+import org.apache.kafka.clients.admin.ListConsumerGroupsResult;
 import org.apache.kafka.common.KafkaFuture;
-import org.apache.kafka.common.Metric;
-import org.apache.kafka.common.MetricName;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -23,21 +21,30 @@ import org.eclipse.microprofile.health.Readiness;
 public class BaristaReadinessCheck implements HealthCheck {
 
     @Inject
-    @ConfigProperty(name = "mp.messaging.connector.liberty-kafka.bootstrap.servers" )
+    @ConfigProperty(name = "mp.messaging.connector.liberty-kafka.bootstrap.servers")
     String kafkaServer;
 
     private boolean isReady() {
-        Properties connectionProperties = new Properties();
-        connectionProperties.put("bootstrap.servers", kafkaServer);
-        AdminClient adminClient = AdminClient.create(connectionProperties);
-        ListTopicsResult topicsResult = adminClient.listTopics();
-        KafkaFuture<Set<String>> topicsNamesFuture = topicsResult.names();
+        AdminClient adminClient = createAdminClient();
+        return checkIfBaristasConsumerGroupRegistered(adminClient);
+    }
+
+    private boolean checkIfBaristasConsumerGroupRegistered(AdminClient adminClient) {
+        ListConsumerGroupsResult groupsResult = adminClient.listConsumerGroups();
+        KafkaFuture<Collection<ConsumerGroupListing>> consumerGroupsFuture = groupsResult.valid();
         try {
-            Set<String> topicNames = topicsNamesFuture.get();
-            return topicNames.contains("queue") && topicNames.contains("orders");
+            Collection<ConsumerGroupListing> consumerGroups = consumerGroupsFuture.get();
+            return consumerGroups.stream().anyMatch(group -> group.groupId().equals("baristas"));
         } catch (InterruptedException | ExecutionException e) {
             return false;
         }
+    }
+
+    private AdminClient createAdminClient() {
+        Properties connectionProperties = new Properties();
+        connectionProperties.put("bootstrap.servers", kafkaServer);
+        AdminClient adminClient = AdminClient.create(connectionProperties);
+        return adminClient;
     }
 	
     @Override
