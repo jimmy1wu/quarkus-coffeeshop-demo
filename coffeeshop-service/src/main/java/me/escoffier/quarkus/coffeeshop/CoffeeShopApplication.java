@@ -14,6 +14,7 @@ public class CoffeeShopApplication extends Application {
        HashSet<Class<?>> classes = new HashSet<>();
        classes.add(CoffeeShopResource.class);
        classes.add(BoardResource.class);
+       classes.add(CoffeeShopHttpResource.class);
        return classes;
     }
 }

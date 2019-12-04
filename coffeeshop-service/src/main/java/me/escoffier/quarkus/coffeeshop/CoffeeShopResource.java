@@ -16,12 +16,9 @@ import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
 import org.eclipse.microprofile.reactive.streams.operators.ReactiveStreams;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import me.escoffier.quarkus.coffeeshop.http.BaristaService;
-import me.escoffier.quarkus.coffeeshop.model.Beverage;
 import me.escoffier.quarkus.coffeeshop.model.Order;
 import me.escoffier.quarkus.coffeeshop.model.PreparationState;
 
@@ -35,10 +32,6 @@ public class CoffeeShopResource {
     @Inject
     Jsonb jsonb;
 
-    // @Inject
-    // @RestClient
-    // BaristaService barista;
-    
     class EventProducer {
 
         private BlockingQueue<String> buffer;
@@ -52,9 +45,9 @@ public class CoffeeShopResource {
         String nextEvent() {
             String event;
             try {
-                logger.info("Producer: " + name + " asked for next event");
+                logger.debug("Producer: " + name + " asked for next event");
                 event = buffer.take();
-                logger.info("Producer: " + name + " Returning event: " + event);
+                logger.debug("Producer: " + name + " Returning event: " + event);
                 return event;
             } catch (InterruptedException e) {
                 logger.error("Producer: " + name + " interrupted!");
@@ -63,20 +56,13 @@ public class CoffeeShopResource {
         }    
 
         void addEvent(String event) {
-            logger.info("Producer: " + name + " Adding event: " + event);
+            logger.debug("Producer: " + name + " Adding event: " + event);
             buffer.add(event);
         }
     }
 
     private EventProducer queueBuffer = new EventProducer("queue");
     private EventProducer orderBuffer = new EventProducer("orders");
-
-    
-    // @POST
-    // @Path("/http")
-    // public Beverage http(final Order order) {
-    //     //return barista.order(order.setOrderId(UUID.randomUUID().toString()));
-    // }
 
     @Path("/messaging")  
     @POST

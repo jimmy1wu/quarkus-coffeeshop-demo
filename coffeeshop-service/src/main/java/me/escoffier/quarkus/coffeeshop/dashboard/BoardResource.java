@@ -26,13 +26,13 @@ public class BoardResource {
 
     @OnOpen
     public void subscribeToQueue(Session session, EndpointConfig ec) {
-        logger.info("Websocket opened " + session.getId());
+        logger.debug("Websocket opened " + session.getId());
         clientSessions.add(session);
     }
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        logger.info("Websocket session closed " + session.getId());
+        logger.debug("Websocket session closed " + session.getId());
         clientSessions.remove(session);
     }
 
@@ -43,6 +43,7 @@ public class BoardResource {
         synchronized (clientSessions) {
             for (Session clientSession : clientSessions) {
                 try {
+                    logger.debug("Sending to websocket client: " + clientSession.getId());
                     clientSession.getBasicRemote().sendText(data);
                 } catch (IOException e) {
                     logger.error("Error sending message to websocket client " + clientSession.getId(), e);
