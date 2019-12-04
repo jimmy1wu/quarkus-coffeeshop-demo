@@ -9,6 +9,8 @@ install:
   - curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.6.0/kind-$(uname)-amd64 && chmod +x ./kind && mv ./kind ~/bin
     # Install kubectl
   - curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl && chmod +x ./kubectl && mv ./kubectl ~/bin
+    # Install helm
+  - curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
 script:
     # Build docker images for the services
@@ -17,24 +19,25 @@ script:
   - ./.ci/local-cluster.sh
     # Push images to local registry
   - ./.ci/local-registry.sh
-    # Update deployments to reference the local registry
-  - ./.ci/replace-refs.sh
-    # Install kafka via Strimzi
-  - ./start-strimzi.sh
-    # Wait for strimzi custom resource to be ready (this will be ready once the
-    # zookeeper and kafka cluster have been created and are ready)
-  - kubectl wait --for=condition=Ready kafkas/kafka-cluster -n kafka --timeout=180s || kubectl logs deployment/strimzi-cluster-operator -n kafka
-    # 4. Display overall system state for kafka namespace
+    # Install kafka via Strimzi helm chart, placing Strimzi operator in strimzi
+    # namespace, and watching the kafka namespace.
+    # (Cannot be expressed as a helm dependency, as CRDs must be installed first)
+  - kubectl create ns strimzi
+  - kubectl create ns kafka
+  - helm repo add strimzi https://strimzi.io/charts
+  - helm install strimzi strimzi/strimzi-kafka-operator -n strimzi --set watchNamespaces={kafka} --wait --timeout 300s
+    # Install Strimzi custom resource, and wait for cluster creation
+  - kubectl apply -f kafka-strimzi.yml -n kafka
+  - kubectl wait --for=condition=Ready kafkas/my-cluster -n kafka --timeout 300s
+    # Deploy to local cluster via helm, into coffee namespace.
+  - kubectl create ns coffee
+  - helm install coffee-v1 ./coffeeshop-chart -n coffee --wait --timeout 300s --set baristaKafka.image.repository=registry:5000/barista-kafka --set baristaHttp.image.repository=registry:5000/barista-http --set coffeeshopService.image.repository=registry:5000/coffeeshop-service
+    # Display overall system state for kafka and coffee namespaces
   - kubectl get all -n kafka
-    # Deploy to local cluster
-  - ./apply-kubernetes.sh
-    # Wait for all pods to be ready
-  - kubectl wait --for=condition=Ready pod -l app=barista-kafka -n coffeeshop-demo --timeout=180s || kubectl logs deployment/barista-kafka -n coffeeshop-demo
-  - kubectl wait --for=condition=Ready pod -l app=barista-http -n coffeeshop-demo --timeout=180s || kubectl logs deployment/barista-http -n coffeeshop-demo
-  - kubectl wait --for=condition=Ready pod -l app=coffeeshop-service -n coffeeshop-demo --timeout=180s || kubectl logs deployment/coffeeshop-service -n coffeeshop-demo
-    # Display overall system state
-  - kubectl get all -n coffeeshop-demo
-    # Forward local port
-  - kubectl port-forward service/coffeeshop-service 8080:8080 -n coffeeshop-demo &
+  - kubectl get all -n coffee
+    # Forward local port (kind does not expose NodePort to host network)
+  - kubectl port-forward service/coffee-v1-coffeeshop-service 8080 -n coffee &
     # Wait for port forwarding, test system
-  - sleep 5 && ./ci-test.sh
+  - sleep 5 && ./ci-test.sh ; export TEST_RC=$?
+    # If the test failed, dump the logs for coffeeshop-service and barista-kafka
+  - if [ $TEST_RC -ne 0 ]; then kubectl logs deployment/coffee-v1-coffeeshop-service -n coffee ; kubectl logs deployment/coffee-v1-barista-kafka -n coffee ; (exit $TEST_RC) ; fi
