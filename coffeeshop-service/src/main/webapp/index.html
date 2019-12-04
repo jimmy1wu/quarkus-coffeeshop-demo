@@ -130,15 +130,14 @@
     });
 
     $(function () {
-        var source = new EventSource("http://localhost:8080/services/queue");
-        source.onmessage = function(e) {
+        var websocket = new WebSocket("ws://localhost:8080/services/queue");
+        websocket.onmessage = function(e) {
             console.log(e);
             var state = JSON.parse(e.data);
             if(state.state=="IN_QUEUE")
                 $("tbody").append(line(state));
             if(state.state=="READY")
                 $("#"+state.order.orderId).replaceWith(line(state));
-            
         };
     });
 

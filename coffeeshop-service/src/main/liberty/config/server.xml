@@ -4,6 +4,7 @@
     <feature>microProfile-3.0</feature>
     <feature>mpReactiveMessaging-1.0</feature>
     <feature>mpReactiveStreams-1.0</feature>
+    <feature>websocket-1.1</feature>
   </featureManager>
 
   <httpEndpoint httpPort="8080" id="defaultHttpEndpoint" host="*" />
