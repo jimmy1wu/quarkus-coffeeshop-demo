@@ -1,0 +1,21 @@
+apiVersion: keda.k8s.io/v1alpha1
+kind: ScaledObject
+metadata:
+  name: barista-kafka
+  namespace: {{ .Release.Namespace }}
+  labels:
+    deploymentName: {{ include "baristaKafka.fullname" . }}
+spec:
+  scaleTargetRef:
+    deploymentName: {{ include "baristaKafka.fullname" . }}
+  pollingInterval: 1
+  cooldownPeriod:  300
+  minReplicaCount: 0
+  maxReplicaCount: 10
+  triggers:
+    - type: kafka
+      metadata:
+        topic: orders
+        brokerList: {{ .Values.kafka.bootstrap.service }}.{{ .Values.kafka.namespace }}:{{ .Values.kafka.bootstrap.port }}
+        consumerGroup: baristas
+        lagThreshold: '3'
