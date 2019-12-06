@@ -24,13 +24,14 @@ spec:
         ports:
           - containerPort: 8080
         livenessProbe:
-          tcpSocket:
+          httpGet:
+            path: /health/live
             port: 8080
           periodSeconds: 10
           failureThreshold: 10
         readinessProbe:
           httpGet:
-            path: /
+            path: /health/ready
             port: 8080
         imagePullPolicy: {{ .Values.coffeeshopService.image.pullPolicy }}
         env:
@@ -38,5 +39,9 @@ spec:
             value: "{{ .Values.kafka.bootstrap.service }}.{{ .Values.kafka.namespace }}:{{ .Values.kafka.bootstrap.port }}"
           - name: BARISTA_HOST
             value: "{{ include "baristaHttp.fullname" . }}:8082"
-        command: ["/bin/sh"]
-        args: ["-c", "/opt/ol/wlp/bin/server run defaultServer -Dmp.messaging.connector.liberty-kafka.bootstrap.servers=$(KAFKA_HOST)"]
+        command:
+          - /opt/ol/wlp/bin/server
+          - run
+          - defaultServer
+          - -Dmp.messaging.connector.liberty-kafka.bootstrap.servers=$(KAFKA_HOST)
+          - -Dme.escoffier.quarkus.coffeeshop.http.BaristaService/mp-rest/url=http://$(BARISTA_HOST)
