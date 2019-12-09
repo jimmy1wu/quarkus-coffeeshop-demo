@@ -23,17 +23,14 @@ public class BoardResource {
     private SseBroadcaster broadcaster;
     private Sse sse;
 
-    @Context
-    public void setSse( Sse sse) {
-        this.sse = sse;
-        logger.info("setSse: sse " + sse + ", broadcaster " + broadcaster);
-    }
-
     @GET
     @Produces(MediaType.SERVER_SENT_EVENTS)
     public void subscribeToQueue(@Context SseEventSink eventSink, @Context Sse sse) {
-        logger.info("Client subscribed to SSE events " + eventSink);
-        if (broadcaster == null) {
+        logger.debug("Client subscribed to SSE events " + eventSink + " this = " + this);
+        if (this.sse  == null) {
+            this.sse = sse;
+        }
+        if (this.broadcaster == null) {
             this.broadcaster = sse.newBroadcaster();
         }
         broadcaster.register(eventSink);
@@ -41,7 +38,7 @@ public class BoardResource {
 
     @Incoming("beverages")
     public void processQueue(String data) {
-        logger.info("GOT: " + data);
+        logger.debug("GOT: " + data);
         if (broadcaster == null) {
             logger.info("broadcaster == null, don't seem to have context yet");
             return;
@@ -49,10 +46,10 @@ public class BoardResource {
 
         OutboundSseEvent queueEvent = sse.newEvent(data);
         if (queueEvent != null) {
-            logger.info("About to send SSE: " + queueEvent + "to broadcaster: " + broadcaster);
+            logger.debug("About to send SSE: " + queueEvent + "to broadcaster: " + broadcaster);
             broadcaster.broadcast(queueEvent);
         } else {
-            logger.info("Created a null event!");
-        }
+            logger.error("Created a null event! this = " + this);
+        } 
     }
 }
