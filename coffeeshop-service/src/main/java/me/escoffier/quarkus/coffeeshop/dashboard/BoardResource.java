@@ -1,54 +1,58 @@
 package me.escoffier.quarkus.coffeeshop.dashboard;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import javax.enterprise.context.ApplicationScoped;
-import javax.websocket.CloseReason;
-import javax.websocket.EndpointConfig;
-import javax.websocket.OnClose;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.ServerEndpoint;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.sse.OutboundSseEvent;
+import javax.ws.rs.sse.Sse;
+import javax.ws.rs.sse.SseBroadcaster;
+import javax.ws.rs.sse.SseEventSink;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ServerEndpoint("/services/queue")
+@Path("/queue")
 @ApplicationScoped
 public class BoardResource {
 
     private static Logger logger = LoggerFactory.getLogger(BoardResource.class);
-    private List<Session> clientSessions = Collections.synchronizedList(new ArrayList<>());
+    private SseBroadcaster broadcaster;
+    private Sse sse;
 
-    @OnOpen
-    public void subscribeToQueue(Session session, EndpointConfig ec) {
-        logger.debug("Websocket opened " + session.getId());
-        clientSessions.add(session);
+    @Context
+    public void setSse( Sse sse) {
+        this.sse = sse;
+        logger.info("setSse: sse " + sse + ", broadcaster " + broadcaster);
     }
 
-    @OnClose
-    public void onClose(Session session, CloseReason reason) {
-        logger.debug("Websocket session closed " + session.getId());
-        clientSessions.remove(session);
+    @GET
+    @Produces(MediaType.SERVER_SENT_EVENTS)
+    public void subscribeToQueue(@Context SseEventSink eventSink, @Context Sse sse) {
+        logger.info("Client subscribed to SSE events " + eventSink);
+        if (broadcaster == null) {
+            this.broadcaster = sse.newBroadcaster();
+        }
+        broadcaster.register(eventSink);
     }
 
     @Incoming("beverages")
     public void processQueue(String data) {
         logger.info("GOT: " + data);
+        if (broadcaster == null) {
+            logger.info("broadcaster == null, don't seem to have context yet");
+            return;
+        } 
 
-        synchronized (clientSessions) {
-            for (Session clientSession : clientSessions) {
-                try {
-                    logger.debug("Sending to websocket client: " + clientSession.getId());
-                    clientSession.getBasicRemote().sendText(data);
-                } catch (IOException e) {
-                    logger.error("Error sending message to websocket client " + clientSession.getId(), e);
-                }
-            }
+        OutboundSseEvent queueEvent = sse.newEvent(data);
+        if (queueEvent != null) {
+            logger.info("About to send SSE: " + queueEvent + "to broadcaster: " + broadcaster);
+            broadcaster.broadcast(queueEvent);
+        } else {
+            logger.info("Created a null event!");
         }
     }
 }
