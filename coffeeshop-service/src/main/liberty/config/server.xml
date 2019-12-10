@@ -12,9 +12,4 @@
 
   </webApplication>
 
-  <logging  traceSpecification="REACTIVEMESSAGE=all:org.apache.kafka.*=all"
-traceFileName="trace.log"
-maxFileSize="20"
-maxFiles="10"
-traceFormat="BASIC" />
 </server>
