@@ -30,10 +30,11 @@ spec:
           periodSeconds: 10
           failureThreshold: 10
         readinessProbe:
-          exec:
-            command:
-              - /bin/bash
-              - curl localhost:8080/health/ready | grep '"CoffeeshopReadinessCheck","status":"UP"'
+            exec:
+              command:
+                - /bin/bash 
+                - -c
+                - "curl localhost:8080/health/ready | grep '\"CoffeeshopReadinessCheck\",\"status\":\"UP\"'"
         imagePullPolicy: {{ .Values.coffeeshopService.image.pullPolicy }}
         env:
           - name: KAFKA_HOST
