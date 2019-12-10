@@ -15,6 +15,7 @@ services:
 
   kafka:
     image: strimzi/kafka:0.11.3-kafka-2.1.0
+    container_name: kafka
     command: [
       "sh", "-c",
       "bin/kafka-server-start.sh config/server.properties 
@@ -40,6 +41,7 @@ services:
 
   barista-kafka:
       image: barista-kafka
+      container_name: barista-kafka
       command: [
           "/opt/ol/wlp/bin/server", "run", "defaultServer",
           "-Dmp.messaging.connector.liberty-kafka.bootstrap.servers=kafka:9093"
@@ -51,11 +53,13 @@ services:
 
   barista-http:
       image: barista-http
+      container_name: barista-http
       ports:
           - "8082:8082"
 
   coffeeshop-service:
       image: coffeeshop-service
+      container_name: coffeeshop-service
       command: [
           "/opt/ol/wlp/bin/server", "run", "defaultServer",
           "-Dmp.messaging.connector.liberty-kafka.bootstrap.servers=kafka:9093",
@@ -76,19 +80,19 @@ services:
           - coffeeshop-service
       command: >
         /bin/bash -c "
-          while ! curl -sI http://barista-http:8082/health/ready ;
+        while ! curl -s http://barista-http:8082/health/ready | grep '\"BaristaReadinessCheck\",\"status\":\"UP\"' ;
           do
             echo Waiting for barista-http;
             sleep 1;
           done;
           echo barista-http is ready!;
-          while ! curl -sI http://barista-kafka:8090/health/ready ;
+          while ! curl -s http://barista-kafka:8090/health/ready | grep '\"BaristaReadinessCheck\",\"status\":\"UP\"' ;
           do
             echo Waiting for barista-kafka;
             sleep 1;
           done;
           echo barista-kafka is ready!;
-          while ! curl -sI http://coffeeshop-service:8080/health/ready ;
+          while ! curl -s http://coffeeshop-service:8080/health/ready | grep '\"CoffeeshopReadinessCheck\",\"status\":\"UP\"' ;
           do
             echo Waiting for coffeeshop-service;
             sleep 1;
