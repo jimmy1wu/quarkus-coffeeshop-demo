@@ -24,7 +24,8 @@ spec:
           - containerPort: 8090
         imagePullPolicy: {{ .Values.baristaKafka.image.pullPolicy }}
         livenessProbe:
-          tcpSocket:
+          httpGet:
+            path: /health/live
             port: 8090
           periodSeconds: 10
           failureThreshold: 10
