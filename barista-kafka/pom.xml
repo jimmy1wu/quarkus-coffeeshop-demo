@@ -18,13 +18,19 @@
         <!-- Open Liberty Features -->
         <dependency>
             <groupId>io.openliberty.features</groupId>
-            <artifactId>microProfile-3.0</artifactId>
+            <artifactId>mpHealth-2.0</artifactId>
             <version>19.0.0.11</version>
             <type>esa</type>
         </dependency>
         <dependency>
             <groupId>io.openliberty.features</groupId>
             <artifactId>mpReactiveMessaging-1.0</artifactId>
+            <version>19.0.0.11</version>
+            <type>esa</type>
+        </dependency>
+        <dependency>
+            <groupId>io.openliberty.features</groupId>
+            <artifactId>jsonb-1.0</artifactId>
             <version>19.0.0.11</version>
             <type>esa</type>
         </dependency>
@@ -107,17 +113,7 @@
                 <artifactId>liberty-maven-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <assemblyArtifact>
-                        <groupId>io.openliberty</groupId>
-                        <artifactId>openliberty-runtime</artifactId>
-                        <version>RELEASE</version>
-                        <type>zip</type>
-                    </assemblyArtifact>
                     <serverName>defaultServer</serverName>
-                    <stripVersion>true</stripVersion>
-                    <configFile>src/main/liberty/config/server.xml</configFile>
-                    <looseApplication>true</looseApplication>
-                    <packageFile> ${project.build.directory}/barista-kafka.tar.gz</packageFile>
                 </configuration>
             </plugin>
         </plugins>
