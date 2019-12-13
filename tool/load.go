@@ -10,7 +10,7 @@ import (
 )
 
 func orderCoffee(baseURL string, orders int, name string, wg *sync.WaitGroup) {
-	coffeeURL := baseURL + "/messaging"
+	coffeeURL := baseURL + "/services/messaging"
 
 	for i := 1; i <= orders; i++ {
 		orderName := fmt.Sprintf("%v-%v", name, i)

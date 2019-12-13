@@ -3,6 +3,8 @@ package me.escoffier.quarkus.coffeeshop;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.bind.Jsonb;
@@ -22,6 +24,8 @@ public class KafkaBarista {
     @ConfigProperty(name = "barista.name")
     String name;
 
+    private static Logger logger = LoggerFactory.getLogger(KafkaBarista.class);
+
     private Random random = new Random();
     
     @Incoming("orders")
@@ -29,15 +33,16 @@ public class KafkaBarista {
     public CompletionStage<String> prepare(String message) {
         Jsonb jsonb = JsonbBuilder.create();
         Order order = jsonb.fromJson(message, Order.class);
-        System.out.println("Barista " + name + " is going to prepare a " + order.getProduct());
+        logger.debug("Barista " + name + " has received order " + order.getOrderId());
         return makeIt(order)
                 .thenApply(beverage -> PreparationState.ready(order, beverage));
+                
     }
 
     private CompletionStage<Beverage> makeIt(Order order) {
         return CompletableFuture.supplyAsync(() -> {
-            System.out.println("Preparing a " + order.getProduct());
             prepare();
+            logger.debug("Order " + order.getOrderId() + " completed");
             return new Beverage(order, name);
         }, executor);
     }

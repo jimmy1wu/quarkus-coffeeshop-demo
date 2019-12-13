@@ -24,8 +24,12 @@ public class BaristaReadinessCheck implements HealthCheck {
     @ConfigProperty(name = "mp.messaging.connector.liberty-kafka.bootstrap.servers")
     String kafkaServer;
 
+    private static AdminClient adminClient;
+
     private boolean isReady() {
-        AdminClient adminClient = createAdminClient();
+        if (adminClient == null) {
+            adminClient = createAdminClient();
+        }
         return checkIfBaristasConsumerGroupRegistered(adminClient);
     }
 

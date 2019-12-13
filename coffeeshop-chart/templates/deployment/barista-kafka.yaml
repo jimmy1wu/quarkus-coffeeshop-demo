@@ -29,6 +29,7 @@ spec:
             port: 8090
           periodSeconds: 10
           failureThreshold: 10
+          initialDelaySeconds: 240
         readinessProbe:
           httpGet:
             path: /health/ready
