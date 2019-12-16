@@ -1,0 +1,641 @@
+Subscribing to orders on http://localhost:8080/services/queue 
+Order 1 is: {Demo-1 espresso 654c1587-f7cb-47f2-b17d-ca292d765e70}
+Demo-1 has ordered a espresso: orderId=654c1587-f7cb-47f2-b17d-ca292d765e70
+Order 2 is: {Demo-2 espresso 570d25f0-a074-4b5e-9798-add20690bf24}
+Demo-2 has ordered a espresso: orderId=570d25f0-a074-4b5e-9798-add20690bf24
+Order 3 is: {Demo-3 espresso b2e07903-f955-417a-974a-188546fd5195}
+Demo-3 has ordered a espresso: orderId=b2e07903-f955-417a-974a-188546fd5195
+Order 4 is: {Demo-4 espresso 8a941155-c161-4135-a534-7ff9b09292a3}
+Demo-4 has ordered a espresso: orderId=8a941155-c161-4135-a534-7ff9b09292a3
+Order 5 is: {Demo-5 espresso 1baaac47-4314-4629-8d3b-8cc982390019}
+Demo-5 has ordered a espresso: orderId=1baaac47-4314-4629-8d3b-8cc982390019
+Order 6 is: {Demo-6 espresso 4d016abb-4889-4323-a832-72425f6fba0a}
+Demo-6 has ordered a espresso: orderId=4d016abb-4889-4323-a832-72425f6fba0a
+Demo-7 has ordered a espresso: orderId=a452b008-00ed-4a9b-9a4d-0a2133673bbf
+Order 7 is: {Demo-7 espresso a452b008-00ed-4a9b-9a4d-0a2133673bbf}
+Demo-8 has ordered a espresso: orderId=c8efe7b0-909f-40fb-ad04-e58ff7b77f39
+Order 8 is: {Demo-8 espresso c8efe7b0-909f-40fb-ad04-e58ff7b77f39}
+Order 9 is: {Demo-9 espresso 1fe739e2-b7e5-4da4-8465-0cb312be3336}
+Demo-9 has ordered a espresso: orderId=1fe739e2-b7e5-4da4-8465-0cb312be3336
+Demo-10 has ordered a espresso: orderId=53e4ee2b-8428-4539-bfb3-6db13669e009
+Order 10 is: {Demo-10 espresso 53e4ee2b-8428-4539-bfb3-6db13669e009}
+Order 11 is: {Demo-11 espresso d15673bc-a6e2-4b6b-9704-b6dafc315e1c}
+Demo-11 has ordered a espresso: orderId=d15673bc-a6e2-4b6b-9704-b6dafc315e1c
+Demo-12 has ordered a espresso: orderId=013edae0-54bf-48cd-9b50-fae695658581
+Order 12 is: {Demo-12 espresso 013edae0-54bf-48cd-9b50-fae695658581}
+Order 13 is: {Demo-13 espresso 5b517918-e65a-4ccc-990b-2789436b407e}
+Demo-13 has ordered a espresso: orderId=5b517918-e65a-4ccc-990b-2789436b407e
+Order 14 is: {Demo-14 espresso da9b15ab-36b8-4221-9692-788eaa1f43c9}
+Demo-14 has ordered a espresso: orderId=da9b15ab-36b8-4221-9692-788eaa1f43c9
+Demo-15 has ordered a espresso: orderId=6fd3a69b-9bae-47e9-938c-bb768a40207d
+Order 15 is: {Demo-15 espresso 6fd3a69b-9bae-47e9-938c-bb768a40207d}
+Order 16 is: {Demo-16 espresso b6c84b83-ab74-4bbe-93c4-1cbaac7f1dbc}
+Demo-16 has ordered a espresso: orderId=b6c84b83-ab74-4bbe-93c4-1cbaac7f1dbc
+Order 17 is: {Demo-17 espresso a0cfdfdb-41af-4ce6-91da-5b0d0313b34f}
+Demo-17 has ordered a espresso: orderId=a0cfdfdb-41af-4ce6-91da-5b0d0313b34f
+Order 18 is: {Demo-18 espresso b6fc2e49-834f-4894-8d8d-2ccd3a332306}
+Demo-18 has ordered a espresso: orderId=b6fc2e49-834f-4894-8d8d-2ccd3a332306
+Order 19 is: {Demo-19 espresso a5d41672-6540-48a7-a313-dabd773362a3}
+Demo-19 has ordered a espresso: orderId=a5d41672-6540-48a7-a313-dabd773362a3
+Order 20 is: {Demo-20 espresso 49ace5e5-5f0f-474b-a45c-7e0515624107}
+Demo-20 has ordered a espresso: orderId=49ace5e5-5f0f-474b-a45c-7e0515624107
+Order 21 is: {Demo-21 espresso 0a834df1-8da5-4c73-b9b8-675b4b3d6319}
+Demo-21 has ordered a espresso: orderId=0a834df1-8da5-4c73-b9b8-675b4b3d6319
+Order 22 is: {Demo-22 espresso 42f0de7d-ec39-49c1-a680-8311a2edfc34}
+Order 23 is: {Demo-23 espresso 843a52fc-0375-4e50-ab7e-1ad4a872f0c0}
+Demo-22 has ordered a espresso: orderId=42f0de7d-ec39-49c1-a680-8311a2edfc34
+Demo-23 has ordered a espresso: orderId=843a52fc-0375-4e50-ab7e-1ad4a872f0c0
+Demo-24 has ordered a espresso: orderId=61a9123c-bade-46a1-b67d-e6e782f9a2c1
+Order 24 is: {Demo-24 espresso 61a9123c-bade-46a1-b67d-e6e782f9a2c1}
+Demo-25 has ordered a espresso: orderId=9af3c14b-358a-41ad-8723-5fc2822b5e4e
+Order 25 is: {Demo-25 espresso 9af3c14b-358a-41ad-8723-5fc2822b5e4e}
+Demo-26 has ordered a espresso: orderId=26bb92db-867d-4fb6-9038-c4ae4d2f753f
+Order 26 is: {Demo-26 espresso 26bb92db-867d-4fb6-9038-c4ae4d2f753f}
+Demo-27 has ordered a espresso: orderId=cdc30157-a3ac-4c8d-8918-a890e46e7a25
+Order 27 is: {Demo-27 espresso cdc30157-a3ac-4c8d-8918-a890e46e7a25}
+Demo-28 has ordered a espresso: orderId=f3613f72-e910-426d-98d2-ac7a8550d2cc
+Order 28 is: {Demo-28 espresso f3613f72-e910-426d-98d2-ac7a8550d2cc}
+Demo-29 has ordered a espresso: orderId=38266dbb-c623-471a-8590-6880e55141ab
+Order 29 is: {Demo-29 espresso 38266dbb-c623-471a-8590-6880e55141ab}
+Order 30 is: {Demo-30 espresso 9ecbf095-e997-46c8-9c0a-ed9763a85673}
+Demo-30 has ordered a espresso: orderId=9ecbf095-e997-46c8-9c0a-ed9763a85673
+Demo-31 has ordered a espresso: orderId=40e84f81-2daf-44bb-b6b3-4289fc05323e
+Order 31 is: {Demo-31 espresso 40e84f81-2daf-44bb-b6b3-4289fc05323e}
+Demo-32 has ordered a espresso: orderId=233c210c-ccc9-4571-aeea-8a6df93523ee
+Order 32 is: {Demo-32 espresso 233c210c-ccc9-4571-aeea-8a6df93523ee}
+Order 33 is: {Demo-33 espresso 3da2f46f-c265-4637-9653-5f7e8401ef80}
+Demo-33 has ordered a espresso: orderId=3da2f46f-c265-4637-9653-5f7e8401ef80
+Demo-34 has ordered a espresso: orderId=3b6dedd8-0e3b-4df0-a282-a91183de48bd
+Order 34 is: {Demo-34 espresso 3b6dedd8-0e3b-4df0-a282-a91183de48bd}
+Demo-35 has ordered a espresso: orderId=f4cac12c-aeae-4d99-8a2c-b6d9008d4b87
+Order 35 is: {Demo-35 espresso f4cac12c-aeae-4d99-8a2c-b6d9008d4b87}
+Order 36 is: {Demo-36 espresso 968527a8-fe49-49b2-8898-9e0815fd653b}
+Demo-36 has ordered a espresso: orderId=968527a8-fe49-49b2-8898-9e0815fd653b
+Order 37 is: {Demo-37 espresso f8a47ed7-6c16-49b5-99c8-2530e02dbdbe}
+Demo-37 has ordered a espresso: orderId=f8a47ed7-6c16-49b5-99c8-2530e02dbdbe
+Order 38 is: {Demo-38 espresso 48038612-2cdd-477d-8264-f3791667b63a}
+Demo-38 has ordered a espresso: orderId=48038612-2cdd-477d-8264-f3791667b63a
+Order 39 is: {Demo-39 espresso 7a03f4b5-985e-41b9-8d35-ff50b0e87dd1}
+Demo-39 has ordered a espresso: orderId=7a03f4b5-985e-41b9-8d35-ff50b0e87dd1
+Order 40 is: {Demo-40 espresso c916d3cb-bd5e-41ad-b650-04714687c092}
+Order 41 is: {Demo-41 espresso a3cb5b18-c094-4913-94ac-7fd56d6a76cf}
+Demo-40 has ordered a espresso: orderId=c916d3cb-bd5e-41ad-b650-04714687c092
+Demo-41 has ordered a espresso: orderId=a3cb5b18-c094-4913-94ac-7fd56d6a76cf
+Order 42 is: {Demo-42 espresso bb4568cb-dbb5-48d3-af7c-e38bbf86b011}
+Demo-42 has ordered a espresso: orderId=bb4568cb-dbb5-48d3-af7c-e38bbf86b011
+Demo-43 has ordered a espresso: orderId=113c68e9-00e0-4ace-bb2c-93fffe158d9c
+Order 43 is: {Demo-43 espresso 113c68e9-00e0-4ace-bb2c-93fffe158d9c}
+Demo-44 has ordered a espresso: orderId=ad65c8b4-cb3d-4f38-98ad-b703602d6bdc
+Order 44 is: {Demo-44 espresso ad65c8b4-cb3d-4f38-98ad-b703602d6bdc}
+Order 45 is: {Demo-45 espresso 925b5bff-7e57-4da0-a9c5-39ae8afd7554}
+Demo-45 has ordered a espresso: orderId=925b5bff-7e57-4da0-a9c5-39ae8afd7554
+Order 46 is: {Demo-46 espresso 2ef474e6-3209-4ff7-898b-f1d784719cf5}
+Demo-46 has ordered a espresso: orderId=2ef474e6-3209-4ff7-898b-f1d784719cf5
+Demo-47 has ordered a espresso: orderId=ed633a6c-f5b8-476a-95c7-c3df2ba878f5
+Order 47 is: {Demo-47 espresso ed633a6c-f5b8-476a-95c7-c3df2ba878f5}
+Order 48 is: {Demo-48 espresso a3e38bfc-b803-4d9b-8a7b-02303276e11a}
+Demo-48 has ordered a espresso: orderId=a3e38bfc-b803-4d9b-8a7b-02303276e11a
+Demo-49 has ordered a espresso: orderId=fc703905-a0f1-40ae-896e-a42859069518
+Order 49 is: {Demo-49 espresso fc703905-a0f1-40ae-896e-a42859069518}
+Order 50 is: {Demo-50 espresso 99e35355-a239-431b-b3b8-10ce00b900c7}
+Demo-50 has ordered a espresso: orderId=99e35355-a239-431b-b3b8-10ce00b900c7
+Beverage for Demo-3 is ready: prepared by Kyle
+Beverage for Demo-8 is ready: prepared by Kyle
+Beverage for Demo-13 is ready: prepared by Kyle
+Beverage for Demo-18 is ready: prepared by Kyle
+Beverage for Demo-8 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-8 c8efe7b0-909f-40fb-ad04-e58ff7b77f39 Shiloh}
+  - existing beverage: [{espresso Demo-8 c8efe7b0-909f-40fb-ad04-e58ff7b77f39 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-23 is ready: prepared by Kyle
+Beverage for Demo-8 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-8 c8efe7b0-909f-40fb-ad04-e58ff7b77f39 Maci}
+  - existing beverage: [{espresso Demo-8 c8efe7b0-909f-40fb-ad04-e58ff7b77f39 Kyle} {espresso Demo-8 c8efe7b0-909f-40fb-ad04-e58ff7b77f39 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-13 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-13 5b517918-e65a-4ccc-990b-2789436b407e Shiloh}
+  - existing beverage: [{espresso Demo-13 5b517918-e65a-4ccc-990b-2789436b407e Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-28 is ready: prepared by Kyle
+Beverage for Demo-13 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-13 5b517918-e65a-4ccc-990b-2789436b407e Maci}
+  - existing beverage: [{espresso Demo-13 5b517918-e65a-4ccc-990b-2789436b407e Kyle} {espresso Demo-13 5b517918-e65a-4ccc-990b-2789436b407e Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-18 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-18 b6fc2e49-834f-4894-8d8d-2ccd3a332306 Shiloh}
+  - existing beverage: [{espresso Demo-18 b6fc2e49-834f-4894-8d8d-2ccd3a332306 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-33 is ready: prepared by Kyle
+Beverage for Demo-38 is ready: prepared by Kyle
+Beverage for Demo-18 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-18 b6fc2e49-834f-4894-8d8d-2ccd3a332306 Maci}
+  - existing beverage: [{espresso Demo-18 b6fc2e49-834f-4894-8d8d-2ccd3a332306 Kyle} {espresso Demo-18 b6fc2e49-834f-4894-8d8d-2ccd3a332306 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-23 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-23 843a52fc-0375-4e50-ab7e-1ad4a872f0c0 Maci}
+  - existing beverage: [{espresso Demo-23 843a52fc-0375-4e50-ab7e-1ad4a872f0c0 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-23 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-23 843a52fc-0375-4e50-ab7e-1ad4a872f0c0 Shiloh}
+  - existing beverage: [{espresso Demo-23 843a52fc-0375-4e50-ab7e-1ad4a872f0c0 Kyle} {espresso Demo-23 843a52fc-0375-4e50-ab7e-1ad4a872f0c0 Maci}]
+ - total completions for this order: 3
+Beverage for Demo-28 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-28 f3613f72-e910-426d-98d2-ac7a8550d2cc Maci}
+  - existing beverage: [{espresso Demo-28 f3613f72-e910-426d-98d2-ac7a8550d2cc Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-43 is ready: prepared by Kyle
+Beverage for Demo-28 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-28 f3613f72-e910-426d-98d2-ac7a8550d2cc Shiloh}
+  - existing beverage: [{espresso Demo-28 f3613f72-e910-426d-98d2-ac7a8550d2cc Kyle} {espresso Demo-28 f3613f72-e910-426d-98d2-ac7a8550d2cc Maci}]
+ - total completions for this order: 3
+Beverage for Demo-33 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-33 3da2f46f-c265-4637-9653-5f7e8401ef80 Maci}
+  - existing beverage: [{espresso Demo-33 3da2f46f-c265-4637-9653-5f7e8401ef80 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-38 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-38 48038612-2cdd-477d-8264-f3791667b63a Maci}
+  - existing beverage: [{espresso Demo-38 48038612-2cdd-477d-8264-f3791667b63a Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-48 is ready: prepared by Kyle
+Beverage for Demo-4 is ready: prepared by Kyle
+Beverage for Demo-33 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-33 3da2f46f-c265-4637-9653-5f7e8401ef80 Shiloh}
+  - existing beverage: [{espresso Demo-33 3da2f46f-c265-4637-9653-5f7e8401ef80 Kyle} {espresso Demo-33 3da2f46f-c265-4637-9653-5f7e8401ef80 Maci}]
+ - total completions for this order: 3
+Beverage for Demo-43 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-43 113c68e9-00e0-4ace-bb2c-93fffe158d9c Maci}
+  - existing beverage: [{espresso Demo-43 113c68e9-00e0-4ace-bb2c-93fffe158d9c Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-38 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-38 48038612-2cdd-477d-8264-f3791667b63a Shiloh}
+  - existing beverage: [{espresso Demo-38 48038612-2cdd-477d-8264-f3791667b63a Kyle} {espresso Demo-38 48038612-2cdd-477d-8264-f3791667b63a Maci}]
+ - total completions for this order: 3
+Beverage for Demo-9 is ready: prepared by Kyle
+Beverage for Demo-48 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-48 a3e38bfc-b803-4d9b-8a7b-02303276e11a Maci}
+  - existing beverage: [{espresso Demo-48 a3e38bfc-b803-4d9b-8a7b-02303276e11a Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-43 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-43 113c68e9-00e0-4ace-bb2c-93fffe158d9c Shiloh}
+  - existing beverage: [{espresso Demo-43 113c68e9-00e0-4ace-bb2c-93fffe158d9c Kyle} {espresso Demo-43 113c68e9-00e0-4ace-bb2c-93fffe158d9c Maci}]
+ - total completions for this order: 3
+Beverage for Demo-48 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-48 a3e38bfc-b803-4d9b-8a7b-02303276e11a Shiloh}
+  - existing beverage: [{espresso Demo-48 a3e38bfc-b803-4d9b-8a7b-02303276e11a Kyle} {espresso Demo-48 a3e38bfc-b803-4d9b-8a7b-02303276e11a Maci}]
+ - total completions for this order: 3
+Beverage for Demo-14 is ready: prepared by Kyle
+Beverage for Demo-4 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-4 8a941155-c161-4135-a534-7ff9b09292a3 Shiloh}
+  - existing beverage: [{espresso Demo-4 8a941155-c161-4135-a534-7ff9b09292a3 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-4 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-4 8a941155-c161-4135-a534-7ff9b09292a3 Maci}
+  - existing beverage: [{espresso Demo-4 8a941155-c161-4135-a534-7ff9b09292a3 Kyle} {espresso Demo-4 8a941155-c161-4135-a534-7ff9b09292a3 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-9 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-9 1fe739e2-b7e5-4da4-8465-0cb312be3336 Maci}
+  - existing beverage: [{espresso Demo-9 1fe739e2-b7e5-4da4-8465-0cb312be3336 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-9 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-9 1fe739e2-b7e5-4da4-8465-0cb312be3336 Shiloh}
+  - existing beverage: [{espresso Demo-9 1fe739e2-b7e5-4da4-8465-0cb312be3336 Kyle} {espresso Demo-9 1fe739e2-b7e5-4da4-8465-0cb312be3336 Maci}]
+ - total completions for this order: 3
+Beverage for Demo-19 is ready: prepared by Kyle
+Beverage for Demo-14 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-14 da9b15ab-36b8-4221-9692-788eaa1f43c9 Maci}
+  - existing beverage: [{espresso Demo-14 da9b15ab-36b8-4221-9692-788eaa1f43c9 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-14 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-14 da9b15ab-36b8-4221-9692-788eaa1f43c9 Shiloh}
+  - existing beverage: [{espresso Demo-14 da9b15ab-36b8-4221-9692-788eaa1f43c9 Kyle} {espresso Demo-14 da9b15ab-36b8-4221-9692-788eaa1f43c9 Maci}]
+ - total completions for this order: 3
+Beverage for Demo-19 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-19 a5d41672-6540-48a7-a313-dabd773362a3 Maci}
+  - existing beverage: [{espresso Demo-19 a5d41672-6540-48a7-a313-dabd773362a3 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-24 is ready: prepared by Kyle
+Beverage for Demo-29 is ready: prepared by Kyle
+Beverage for Demo-34 is ready: prepared by Kyle
+Beverage for Demo-24 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-24 61a9123c-bade-46a1-b67d-e6e782f9a2c1 Maci}
+  - existing beverage: [{espresso Demo-24 61a9123c-bade-46a1-b67d-e6e782f9a2c1 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-29 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-29 38266dbb-c623-471a-8590-6880e55141ab Maci}
+  - existing beverage: [{espresso Demo-29 38266dbb-c623-471a-8590-6880e55141ab Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-39 is ready: prepared by Kyle
+Beverage for Demo-19 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-19 a5d41672-6540-48a7-a313-dabd773362a3 Shiloh}
+  - existing beverage: [{espresso Demo-19 a5d41672-6540-48a7-a313-dabd773362a3 Kyle} {espresso Demo-19 a5d41672-6540-48a7-a313-dabd773362a3 Maci}]
+ - total completions for this order: 3
+Beverage for Demo-24 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-24 61a9123c-bade-46a1-b67d-e6e782f9a2c1 Shiloh}
+  - existing beverage: [{espresso Demo-24 61a9123c-bade-46a1-b67d-e6e782f9a2c1 Kyle} {espresso Demo-24 61a9123c-bade-46a1-b67d-e6e782f9a2c1 Maci}]
+ - total completions for this order: 3
+Beverage for Demo-44 is ready: prepared by Kyle
+Beverage for Demo-34 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-34 3b6dedd8-0e3b-4df0-a282-a91183de48bd Maci}
+  - existing beverage: [{espresso Demo-34 3b6dedd8-0e3b-4df0-a282-a91183de48bd Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-29 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-29 38266dbb-c623-471a-8590-6880e55141ab Shiloh}
+  - existing beverage: [{espresso Demo-29 38266dbb-c623-471a-8590-6880e55141ab Kyle} {espresso Demo-29 38266dbb-c623-471a-8590-6880e55141ab Maci}]
+ - total completions for this order: 3
+Beverage for Demo-49 is ready: prepared by Kyle
+Beverage for Demo-39 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-39 7a03f4b5-985e-41b9-8d35-ff50b0e87dd1 Maci}
+  - existing beverage: [{espresso Demo-39 7a03f4b5-985e-41b9-8d35-ff50b0e87dd1 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-34 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-34 3b6dedd8-0e3b-4df0-a282-a91183de48bd Shiloh}
+  - existing beverage: [{espresso Demo-34 3b6dedd8-0e3b-4df0-a282-a91183de48bd Kyle} {espresso Demo-34 3b6dedd8-0e3b-4df0-a282-a91183de48bd Maci}]
+ - total completions for this order: 3
+Beverage for Demo-5 is ready: prepared by Kyle
+Beverage for Demo-44 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-44 ad65c8b4-cb3d-4f38-98ad-b703602d6bdc Maci}
+  - existing beverage: [{espresso Demo-44 ad65c8b4-cb3d-4f38-98ad-b703602d6bdc Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-39 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-39 7a03f4b5-985e-41b9-8d35-ff50b0e87dd1 Shiloh}
+  - existing beverage: [{espresso Demo-39 7a03f4b5-985e-41b9-8d35-ff50b0e87dd1 Kyle} {espresso Demo-39 7a03f4b5-985e-41b9-8d35-ff50b0e87dd1 Maci}]
+ - total completions for this order: 3
+Beverage for Demo-49 is ready: prepared by Maci
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-49 fc703905-a0f1-40ae-896e-a42859069518 Maci}
+  - existing beverage: [{espresso Demo-49 fc703905-a0f1-40ae-896e-a42859069518 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-10 is ready: prepared by Kyle
+Beverage for Demo-44 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-44 ad65c8b4-cb3d-4f38-98ad-b703602d6bdc Shiloh}
+  - existing beverage: [{espresso Demo-44 ad65c8b4-cb3d-4f38-98ad-b703602d6bdc Kyle} {espresso Demo-44 ad65c8b4-cb3d-4f38-98ad-b703602d6bdc Maci}]
+ - total completions for this order: 3
+Beverage for Demo-15 is ready: prepared by Kyle
+Beverage for Demo-49 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-49 fc703905-a0f1-40ae-896e-a42859069518 Shiloh}
+  - existing beverage: [{espresso Demo-49 fc703905-a0f1-40ae-896e-a42859069518 Kyle} {espresso Demo-49 fc703905-a0f1-40ae-896e-a42859069518 Maci}]
+ - total completions for this order: 3
+Beverage for Demo-20 is ready: prepared by Kyle
+Beverage for Demo-5 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-5 1baaac47-4314-4629-8d3b-8cc982390019 Shiloh}
+  - existing beverage: [{espresso Demo-5 1baaac47-4314-4629-8d3b-8cc982390019 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-10 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-10 53e4ee2b-8428-4539-bfb3-6db13669e009 Shiloh}
+  - existing beverage: [{espresso Demo-10 53e4ee2b-8428-4539-bfb3-6db13669e009 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-15 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-15 6fd3a69b-9bae-47e9-938c-bb768a40207d Shiloh}
+  - existing beverage: [{espresso Demo-15 6fd3a69b-9bae-47e9-938c-bb768a40207d Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-25 is ready: prepared by Kyle
+Beverage for Demo-30 is ready: prepared by Kyle
+Beverage for Demo-35 is ready: prepared by Kyle
+Beverage for Demo-20 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-20 49ace5e5-5f0f-474b-a45c-7e0515624107 Shiloh}
+  - existing beverage: [{espresso Demo-20 49ace5e5-5f0f-474b-a45c-7e0515624107 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-40 is ready: prepared by Kyle
+Beverage for Demo-25 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-25 9af3c14b-358a-41ad-8723-5fc2822b5e4e Shiloh}
+  - existing beverage: [{espresso Demo-25 9af3c14b-358a-41ad-8723-5fc2822b5e4e Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-30 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-30 9ecbf095-e997-46c8-9c0a-ed9763a85673 Shiloh}
+  - existing beverage: [{espresso Demo-30 9ecbf095-e997-46c8-9c0a-ed9763a85673 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-45 is ready: prepared by Kyle
+Beverage for Demo-35 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-35 f4cac12c-aeae-4d99-8a2c-b6d9008d4b87 Shiloh}
+  - existing beverage: [{espresso Demo-35 f4cac12c-aeae-4d99-8a2c-b6d9008d4b87 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-50 is ready: prepared by Kyle
+Beverage for Demo-1 is ready: prepared by Kyle
+Beverage for Demo-6 is ready: prepared by Kyle
+Beverage for Demo-40 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-40 c916d3cb-bd5e-41ad-b650-04714687c092 Shiloh}
+  - existing beverage: [{espresso Demo-40 c916d3cb-bd5e-41ad-b650-04714687c092 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-11 is ready: prepared by Kyle
+Beverage for Demo-45 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-45 925b5bff-7e57-4da0-a9c5-39ae8afd7554 Shiloh}
+  - existing beverage: [{espresso Demo-45 925b5bff-7e57-4da0-a9c5-39ae8afd7554 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-50 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-50 99e35355-a239-431b-b3b8-10ce00b900c7 Shiloh}
+  - existing beverage: [{espresso Demo-50 99e35355-a239-431b-b3b8-10ce00b900c7 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-5 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-5 1baaac47-4314-4629-8d3b-8cc982390019 Shiloh}
+  - existing beverage: [{espresso Demo-5 1baaac47-4314-4629-8d3b-8cc982390019 Kyle} {espresso Demo-5 1baaac47-4314-4629-8d3b-8cc982390019 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-10 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-10 53e4ee2b-8428-4539-bfb3-6db13669e009 Shiloh}
+  - existing beverage: [{espresso Demo-10 53e4ee2b-8428-4539-bfb3-6db13669e009 Kyle} {espresso Demo-10 53e4ee2b-8428-4539-bfb3-6db13669e009 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-16 is ready: prepared by Kyle
+Beverage for Demo-15 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-15 6fd3a69b-9bae-47e9-938c-bb768a40207d Shiloh}
+  - existing beverage: [{espresso Demo-15 6fd3a69b-9bae-47e9-938c-bb768a40207d Kyle} {espresso Demo-15 6fd3a69b-9bae-47e9-938c-bb768a40207d Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-21 is ready: prepared by Kyle
+Beverage for Demo-20 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-20 49ace5e5-5f0f-474b-a45c-7e0515624107 Shiloh}
+  - existing beverage: [{espresso Demo-20 49ace5e5-5f0f-474b-a45c-7e0515624107 Kyle} {espresso Demo-20 49ace5e5-5f0f-474b-a45c-7e0515624107 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-25 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-25 9af3c14b-358a-41ad-8723-5fc2822b5e4e Shiloh}
+  - existing beverage: [{espresso Demo-25 9af3c14b-358a-41ad-8723-5fc2822b5e4e Kyle} {espresso Demo-25 9af3c14b-358a-41ad-8723-5fc2822b5e4e Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-26 is ready: prepared by Kyle
+Beverage for Demo-31 is ready: prepared by Kyle
+Beverage for Demo-30 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-30 9ecbf095-e997-46c8-9c0a-ed9763a85673 Shiloh}
+  - existing beverage: [{espresso Demo-30 9ecbf095-e997-46c8-9c0a-ed9763a85673 Kyle} {espresso Demo-30 9ecbf095-e997-46c8-9c0a-ed9763a85673 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-36 is ready: prepared by Kyle
+Beverage for Demo-41 is ready: prepared by Kyle
+Beverage for Demo-35 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-35 f4cac12c-aeae-4d99-8a2c-b6d9008d4b87 Shiloh}
+  - existing beverage: [{espresso Demo-35 f4cac12c-aeae-4d99-8a2c-b6d9008d4b87 Kyle} {espresso Demo-35 f4cac12c-aeae-4d99-8a2c-b6d9008d4b87 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-46 is ready: prepared by Kyle
+Beverage for Demo-40 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-40 c916d3cb-bd5e-41ad-b650-04714687c092 Shiloh}
+  - existing beverage: [{espresso Demo-40 c916d3cb-bd5e-41ad-b650-04714687c092 Kyle} {espresso Demo-40 c916d3cb-bd5e-41ad-b650-04714687c092 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-45 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-45 925b5bff-7e57-4da0-a9c5-39ae8afd7554 Shiloh}
+  - existing beverage: [{espresso Demo-45 925b5bff-7e57-4da0-a9c5-39ae8afd7554 Kyle} {espresso Demo-45 925b5bff-7e57-4da0-a9c5-39ae8afd7554 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-2 is ready: prepared by Kyle
+Beverage for Demo-7 is ready: prepared by Kyle
+Beverage for Demo-12 is ready: prepared by Kyle
+Beverage for Demo-50 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-50 99e35355-a239-431b-b3b8-10ce00b900c7 Shiloh}
+  - existing beverage: [{espresso Demo-50 99e35355-a239-431b-b3b8-10ce00b900c7 Kyle} {espresso Demo-50 99e35355-a239-431b-b3b8-10ce00b900c7 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-17 is ready: prepared by Kyle
+Beverage for Demo-1 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-1 654c1587-f7cb-47f2-b17d-ca292d765e70 Shiloh}
+  - existing beverage: [{espresso Demo-1 654c1587-f7cb-47f2-b17d-ca292d765e70 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-22 is ready: prepared by Kyle
+Beverage for Demo-27 is ready: prepared by Kyle
+Beverage for Demo-32 is ready: prepared by Kyle
+Beverage for Demo-6 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-6 4d016abb-4889-4323-a832-72425f6fba0a Shiloh}
+  - existing beverage: [{espresso Demo-6 4d016abb-4889-4323-a832-72425f6fba0a Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-37 is ready: prepared by Kyle
+Beverage for Demo-11 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-11 d15673bc-a6e2-4b6b-9704-b6dafc315e1c Shiloh}
+  - existing beverage: [{espresso Demo-11 d15673bc-a6e2-4b6b-9704-b6dafc315e1c Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-42 is ready: prepared by Kyle
+Beverage for Demo-16 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-16 b6c84b83-ab74-4bbe-93c4-1cbaac7f1dbc Shiloh}
+  - existing beverage: [{espresso Demo-16 b6c84b83-ab74-4bbe-93c4-1cbaac7f1dbc Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-47 is ready: prepared by Kyle
+Beverage for Demo-21 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-21 0a834df1-8da5-4c73-b9b8-675b4b3d6319 Shiloh}
+  - existing beverage: [{espresso Demo-21 0a834df1-8da5-4c73-b9b8-675b4b3d6319 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-1 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-1 654c1587-f7cb-47f2-b17d-ca292d765e70 Kyle}
+  - existing beverage: [{espresso Demo-1 654c1587-f7cb-47f2-b17d-ca292d765e70 Kyle} {espresso Demo-1 654c1587-f7cb-47f2-b17d-ca292d765e70 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-26 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-26 26bb92db-867d-4fb6-9038-c4ae4d2f753f Shiloh}
+  - existing beverage: [{espresso Demo-26 26bb92db-867d-4fb6-9038-c4ae4d2f753f Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-6 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-6 4d016abb-4889-4323-a832-72425f6fba0a Kyle}
+  - existing beverage: [{espresso Demo-6 4d016abb-4889-4323-a832-72425f6fba0a Kyle} {espresso Demo-6 4d016abb-4889-4323-a832-72425f6fba0a Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-31 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-31 40e84f81-2daf-44bb-b6b3-4289fc05323e Shiloh}
+  - existing beverage: [{espresso Demo-31 40e84f81-2daf-44bb-b6b3-4289fc05323e Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-36 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-36 968527a8-fe49-49b2-8898-9e0815fd653b Shiloh}
+  - existing beverage: [{espresso Demo-36 968527a8-fe49-49b2-8898-9e0815fd653b Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-11 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-11 d15673bc-a6e2-4b6b-9704-b6dafc315e1c Kyle}
+  - existing beverage: [{espresso Demo-11 d15673bc-a6e2-4b6b-9704-b6dafc315e1c Kyle} {espresso Demo-11 d15673bc-a6e2-4b6b-9704-b6dafc315e1c Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-16 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-16 b6c84b83-ab74-4bbe-93c4-1cbaac7f1dbc Kyle}
+  - existing beverage: [{espresso Demo-16 b6c84b83-ab74-4bbe-93c4-1cbaac7f1dbc Kyle} {espresso Demo-16 b6c84b83-ab74-4bbe-93c4-1cbaac7f1dbc Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-41 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-41 a3cb5b18-c094-4913-94ac-7fd56d6a76cf Shiloh}
+  - existing beverage: [{espresso Demo-41 a3cb5b18-c094-4913-94ac-7fd56d6a76cf Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-21 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-21 0a834df1-8da5-4c73-b9b8-675b4b3d6319 Kyle}
+  - existing beverage: [{espresso Demo-21 0a834df1-8da5-4c73-b9b8-675b4b3d6319 Kyle} {espresso Demo-21 0a834df1-8da5-4c73-b9b8-675b4b3d6319 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-26 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-26 26bb92db-867d-4fb6-9038-c4ae4d2f753f Kyle}
+  - existing beverage: [{espresso Demo-26 26bb92db-867d-4fb6-9038-c4ae4d2f753f Kyle} {espresso Demo-26 26bb92db-867d-4fb6-9038-c4ae4d2f753f Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-46 is ready: prepared by Shiloh
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-46 2ef474e6-3209-4ff7-898b-f1d784719cf5 Shiloh}
+  - existing beverage: [{espresso Demo-46 2ef474e6-3209-4ff7-898b-f1d784719cf5 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-31 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-31 40e84f81-2daf-44bb-b6b3-4289fc05323e Kyle}
+  - existing beverage: [{espresso Demo-31 40e84f81-2daf-44bb-b6b3-4289fc05323e Kyle} {espresso Demo-31 40e84f81-2daf-44bb-b6b3-4289fc05323e Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-36 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-36 968527a8-fe49-49b2-8898-9e0815fd653b Kyle}
+  - existing beverage: [{espresso Demo-36 968527a8-fe49-49b2-8898-9e0815fd653b Kyle} {espresso Demo-36 968527a8-fe49-49b2-8898-9e0815fd653b Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-41 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-41 a3cb5b18-c094-4913-94ac-7fd56d6a76cf Kyle}
+  - existing beverage: [{espresso Demo-41 a3cb5b18-c094-4913-94ac-7fd56d6a76cf Kyle} {espresso Demo-41 a3cb5b18-c094-4913-94ac-7fd56d6a76cf Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-46 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-46 2ef474e6-3209-4ff7-898b-f1d784719cf5 Kyle}
+  - existing beverage: [{espresso Demo-46 2ef474e6-3209-4ff7-898b-f1d784719cf5 Kyle} {espresso Demo-46 2ef474e6-3209-4ff7-898b-f1d784719cf5 Shiloh}]
+ - total completions for this order: 3
+Beverage for Demo-2 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-2 570d25f0-a074-4b5e-9798-add20690bf24 Kyle}
+  - existing beverage: [{espresso Demo-2 570d25f0-a074-4b5e-9798-add20690bf24 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-7 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-7 a452b008-00ed-4a9b-9a4d-0a2133673bbf Kyle}
+  - existing beverage: [{espresso Demo-7 a452b008-00ed-4a9b-9a4d-0a2133673bbf Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-12 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-12 013edae0-54bf-48cd-9b50-fae695658581 Kyle}
+  - existing beverage: [{espresso Demo-12 013edae0-54bf-48cd-9b50-fae695658581 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-17 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-17 a0cfdfdb-41af-4ce6-91da-5b0d0313b34f Kyle}
+  - existing beverage: [{espresso Demo-17 a0cfdfdb-41af-4ce6-91da-5b0d0313b34f Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-22 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-22 42f0de7d-ec39-49c1-a680-8311a2edfc34 Kyle}
+  - existing beverage: [{espresso Demo-22 42f0de7d-ec39-49c1-a680-8311a2edfc34 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-27 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-27 cdc30157-a3ac-4c8d-8918-a890e46e7a25 Kyle}
+  - existing beverage: [{espresso Demo-27 cdc30157-a3ac-4c8d-8918-a890e46e7a25 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-32 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-32 233c210c-ccc9-4571-aeea-8a6df93523ee Kyle}
+  - existing beverage: [{espresso Demo-32 233c210c-ccc9-4571-aeea-8a6df93523ee Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-37 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-37 f8a47ed7-6c16-49b5-99c8-2530e02dbdbe Kyle}
+  - existing beverage: [{espresso Demo-37 f8a47ed7-6c16-49b5-99c8-2530e02dbdbe Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-42 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-42 bb4568cb-dbb5-48d3-af7c-e38bbf86b011 Kyle}
+  - existing beverage: [{espresso Demo-42 bb4568cb-dbb5-48d3-af7c-e38bbf86b011 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-47 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-47 ed633a6c-f5b8-476a-95c7-c3df2ba878f5 Kyle}
+  - existing beverage: [{espresso Demo-47 ed633a6c-f5b8-476a-95c7-c3df2ba878f5 Kyle}]
+ - total completions for this order: 2
+Beverage for Demo-2 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-2 570d25f0-a074-4b5e-9798-add20690bf24 Kyle}
+  - existing beverage: [{espresso Demo-2 570d25f0-a074-4b5e-9798-add20690bf24 Kyle} {espresso Demo-2 570d25f0-a074-4b5e-9798-add20690bf24 Kyle}]
+ - total completions for this order: 3
+Beverage for Demo-7 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-7 a452b008-00ed-4a9b-9a4d-0a2133673bbf Kyle}
+  - existing beverage: [{espresso Demo-7 a452b008-00ed-4a9b-9a4d-0a2133673bbf Kyle} {espresso Demo-7 a452b008-00ed-4a9b-9a4d-0a2133673bbf Kyle}]
+ - total completions for this order: 3
+Beverage for Demo-12 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-12 013edae0-54bf-48cd-9b50-fae695658581 Kyle}
+  - existing beverage: [{espresso Demo-12 013edae0-54bf-48cd-9b50-fae695658581 Kyle} {espresso Demo-12 013edae0-54bf-48cd-9b50-fae695658581 Kyle}]
+ - total completions for this order: 3
+Beverage for Demo-17 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-17 a0cfdfdb-41af-4ce6-91da-5b0d0313b34f Kyle}
+  - existing beverage: [{espresso Demo-17 a0cfdfdb-41af-4ce6-91da-5b0d0313b34f Kyle} {espresso Demo-17 a0cfdfdb-41af-4ce6-91da-5b0d0313b34f Kyle}]
+ - total completions for this order: 3
+Beverage for Demo-22 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-22 42f0de7d-ec39-49c1-a680-8311a2edfc34 Kyle}
+  - existing beverage: [{espresso Demo-22 42f0de7d-ec39-49c1-a680-8311a2edfc34 Kyle} {espresso Demo-22 42f0de7d-ec39-49c1-a680-8311a2edfc34 Kyle}]
+ - total completions for this order: 3
+Beverage for Demo-27 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-27 cdc30157-a3ac-4c8d-8918-a890e46e7a25 Kyle}
+  - existing beverage: [{espresso Demo-27 cdc30157-a3ac-4c8d-8918-a890e46e7a25 Kyle} {espresso Demo-27 cdc30157-a3ac-4c8d-8918-a890e46e7a25 Kyle}]
+ - total completions for this order: 3
+Beverage for Demo-32 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-32 233c210c-ccc9-4571-aeea-8a6df93523ee Kyle}
+  - existing beverage: [{espresso Demo-32 233c210c-ccc9-4571-aeea-8a6df93523ee Kyle} {espresso Demo-32 233c210c-ccc9-4571-aeea-8a6df93523ee Kyle}]
+ - total completions for this order: 3
+Beverage for Demo-37 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-37 f8a47ed7-6c16-49b5-99c8-2530e02dbdbe Kyle}
+  - existing beverage: [{espresso Demo-37 f8a47ed7-6c16-49b5-99c8-2530e02dbdbe Kyle} {espresso Demo-37 f8a47ed7-6c16-49b5-99c8-2530e02dbdbe Kyle}]
+ - total completions for this order: 3
+Beverage for Demo-42 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-42 bb4568cb-dbb5-48d3-af7c-e38bbf86b011 Kyle}
+  - existing beverage: [{espresso Demo-42 bb4568cb-dbb5-48d3-af7c-e38bbf86b011 Kyle} {espresso Demo-42 bb4568cb-dbb5-48d3-af7c-e38bbf86b011 Kyle}]
+ - total completions for this order: 3
+Beverage for Demo-47 is ready: prepared by Kyle
+ERROR: duplicate beverage:
+  - new beverage: {espresso Demo-47 ed633a6c-f5b8-476a-95c7-c3df2ba878f5 Kyle}
+  - existing beverage: [{espresso Demo-47 ed633a6c-f5b8-476a-95c7-c3df2ba878f5 Kyle} {espresso Demo-47 ed633a6c-f5b8-476a-95c7-c3df2ba878f5 Kyle}]
+ - total completions for this order: 3

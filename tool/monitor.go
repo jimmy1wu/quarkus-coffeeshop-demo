@@ -15,22 +15,28 @@ var orders map[string][]Order
 var beverages map[string][]Beverage
 
 func consumeCoffee(baseURL string, wg *sync.WaitGroup) {
-	queueURL := baseURL + "/queue"
+	queueURL := baseURL + "/services/queue"
 
 	orders = make(map[string][]Order)
 	beverages = make(map[string][]Beverage)
 
 	client := sse.NewClient(queueURL)
-	client.SubscribeRaw(consumeEvent)
+	fmt.Printf("Subscribing to orders on %s \n", queueURL)
 
+	client.SubscribeRaw(consumeEvent)
 	wg.Done()
 }
 
 func consumeEvent(msg *sse.Event) {
 	// All events on the queue should be in the Fulfillment format. They may or
 	// may not contain a Beverage.
+	//fmt.Printf("Received an event: %v", msg)
+
 	fulfillment := Fulfillment{}
-	json.Unmarshal(msg.Data, &fulfillment)
+	err := json.Unmarshal(msg.Data, &fulfillment)
+	if err != nil {
+		fmt.Printf("Error unmarshalling eventd data: %v - raw data: %v", err, msg.Data)
+	}
 
 	state := fulfillment.State
 	order := fulfillment.Order

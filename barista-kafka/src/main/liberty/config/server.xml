@@ -13,4 +13,6 @@
 
   </webApplication>
 
+
+<logging traceSpecification="REACTIVEMESSAGE=all:org.apache.kafka.*=all:me.escoffier.quarkus.coffeeshop.*=all"/>
 </server>
