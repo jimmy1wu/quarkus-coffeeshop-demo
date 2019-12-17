@@ -10,8 +10,6 @@
     <packaging>pom</packaging>
 
     <properties>
-        <quarkus.version>0.25.0</quarkus.version>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -24,9 +22,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${quarkus.version}</version>
+                <groupId>io.openliberty.features</groupId>
+                <artifactId>features-bom</artifactId>
+                <version>19.0.0.12</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

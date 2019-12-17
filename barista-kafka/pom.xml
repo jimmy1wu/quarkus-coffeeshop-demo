@@ -19,19 +19,16 @@
         <dependency>
             <groupId>io.openliberty.features</groupId>
             <artifactId>mpHealth-2.0</artifactId>
-            <version>19.0.0.11</version>
             <type>esa</type>
         </dependency>
         <dependency>
             <groupId>io.openliberty.features</groupId>
             <artifactId>mpReactiveMessaging-1.0</artifactId>
-            <version>19.0.0.11</version>
             <type>esa</type>
         </dependency>
         <dependency>
             <groupId>io.openliberty.features</groupId>
             <artifactId>jsonb-1.0</artifactId>
-            <version>19.0.0.11</version>
             <type>esa</type>
         </dependency>
         <dependency>
