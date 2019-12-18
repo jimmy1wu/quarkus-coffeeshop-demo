@@ -46,4 +46,4 @@ spec:
           - run
           - defaultServer
           - -Dmp.messaging.connector.liberty-kafka.bootstrap.servers=$(KAFKA_HOST)
-          - -Dme.escoffier.quarkus.coffeeshop.http.BaristaService/mp-rest/url=http://$(BARISTA_HOST)
+          - -Dcom.ibm.runtimes.events.coffeeshop.http.BaristaService/mp-rest/url=http://$(BARISTA_HOST)
