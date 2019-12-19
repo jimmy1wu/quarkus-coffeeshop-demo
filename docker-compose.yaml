@@ -63,7 +63,7 @@ services:
       command: [
           "/opt/ol/wlp/bin/server", "run", "defaultServer",
           "-Dmp.messaging.connector.liberty-kafka.bootstrap.servers=kafka:9093",
-          "-Dme.escoffier.quarkus.coffeeshop.http.BaristaService/mp-rest/url=http://barista-http:8082"
+          "-Dcom.ibm.runtimes.events.coffeeshop.http.BaristaService/mp-rest/url=http://barista-http:8082"
       ]
       depends_on:
           - kafka

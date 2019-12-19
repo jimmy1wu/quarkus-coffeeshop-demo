@@ -1,9 +1,4 @@
-FROM adoptopenjdk/openjdk8-openj9:x86_64-ubi-minimal-jdk8u232-b09_openj9-0.17.0 AS build
-WORKDIR /
-
-# Install maven
-RUN curl -LO https://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && tar -xzf apache-maven-3.6.3-bin.tar.gz && export PATH=/apache-maven-3.6.3/bin:$PATH && mvn -version
-ENV PATH=/apache-maven-3.6.3/bin:$PATH
+FROM adoptopenjdk/maven-openjdk8-openj9 AS build
 
 WORKDIR /project
 
