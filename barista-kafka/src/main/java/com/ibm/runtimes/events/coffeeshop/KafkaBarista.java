@@ -7,9 +7,14 @@ import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+
+import com.ibm.runtimes.events.coffeeshop.PreparationState.State;
+
 import javax.inject.Inject;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
@@ -19,19 +24,34 @@ import java.util.concurrent.Executors;
 public class KafkaBarista {
 
     @Inject
-    @ConfigProperty(name = "barista.name")
+    @ConfigProperty(name = "mp.messaging.incoming.completed.group.id")
     String name;
 
     private Random random = new Random();
+
+    private Set<Order> completedOrders = new HashSet<Order>();
     
+    private Jsonb jsonb = JsonbBuilder.create();;
+
     @Incoming("orders")
     @Outgoing("queue")
     public CompletionStage<String> prepare(String message) {
-        Jsonb jsonb = JsonbBuilder.create();
         Order order = jsonb.fromJson(message, Order.class);
+        if (completedOrders.contains(order)) {
+            System.out.println("Order " + order.getOrderId() + " has already been completed, skipping.");
+            return null;
+        }
         System.out.println("Barista " + name + " is going to prepare a " + order.getProduct());
         return makeIt(order)
                 .thenApply(beverage -> PreparationState.ready(order, beverage));
+    }
+
+    @Incoming("completed")
+    public void notifyOrderCompleted(String message) {
+        PreparationState completion = jsonb.fromJson(message, PreparationState.class);
+        if (completion.getState() == State.READY) {
+            completedOrders.add(completion.getOrder());
+        }
     }
 
     private CompletionStage<Beverage> makeIt(Order order) {
@@ -41,6 +61,8 @@ public class KafkaBarista {
             return new Beverage(order, name);
         }, executor);
     }
+
+
 
     private Executor executor = Executors.newSingleThreadExecutor();
 
