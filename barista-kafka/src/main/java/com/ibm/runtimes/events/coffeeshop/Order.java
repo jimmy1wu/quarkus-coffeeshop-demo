@@ -32,4 +32,17 @@ public class Order {
         this.orderId = orderId;
         return this;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Order) {
+            return ((Order)other).getOrderId().equals(orderId);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return orderId.hashCode();
+    }
 }

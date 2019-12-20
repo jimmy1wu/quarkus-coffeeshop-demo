@@ -12,6 +12,7 @@ import com.ibm.runtimes.events.coffeeshop.PreparationState.State;
 
 import javax.inject.Inject;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class KafkaBarista {
 
     private Random random = new Random();
 
-    private Set<Order> completedOrders = new HashSet<Order>();
+    private Set<Order> completedOrders = Collections.synchronizedSet(new HashSet<Order>());
     
     private Jsonb jsonb = JsonbBuilder.create();;
 
@@ -58,6 +59,10 @@ public class KafkaBarista {
         return CompletableFuture.supplyAsync(() -> {
             System.out.println("Preparing a " + order.getProduct());
             prepare();
+            if (completedOrders.contains(order)) {
+                System.out.println("Oops, someone else prepared order id " + order.getOrderId() + " I'll throw this one away.");
+                return null;
+            }
             return new Beverage(order, name);
         }, executor);
     }
