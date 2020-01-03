@@ -17,9 +17,11 @@ import javax.json.bind.JsonbBuilder;
 import com.ibm.runtimes.events.coffeeshop.PreparationState.State;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.reactive.messaging.Acknowledgment;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
+import org.eclipse.microprofile.reactive.messaging.Acknowledgment.Strategy;
 import org.eclipse.microprofile.reactive.streams.operators.ReactiveStreams;
 import org.reactivestreams.Processor;
 import org.slf4j.Logger;
@@ -42,14 +44,17 @@ public class KafkaBarista {
 
     @Incoming("orders")
     @Outgoing("pendingOrders")
+    @Acknowledgment(Strategy.MANUAL)
     public Processor<Message<String>,Message<String>> filterCompletedOrders() {
         return ReactiveStreams.<Message<String>>builder().filter(message -> {
             Order order = jsonb.fromJson(message.getPayload(), Order.class);
             if (completedOrders.contains(order)) {
                 logger.debug("Order " + order.getOrderId() + " already completed, filtering.");
+                // Message has been processed by a consumer no longer assigned to the partition,
+                // but it wouldn't have been able to acknowledge it
+                message.ack();
                 return false;
             }
-            message.ack();
             return true;
         }).buildRs();
     }
@@ -76,6 +81,7 @@ public class KafkaBarista {
         return CompletableFuture.supplyAsync(() -> {
             prepareCoffee();
             logger.debug("Order " + order.getOrderId() + " completed");
+
             return new Beverage(order, name);
         }, executor);
     }
