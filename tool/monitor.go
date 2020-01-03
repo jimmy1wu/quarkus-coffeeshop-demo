@@ -9,20 +9,22 @@ import (
 	"github.com/r3labs/sse"
 )
 
-func monitorOrders(wg *sync.WaitGroup) {
+func monitorOrders(wg *sync.WaitGroup, summary bool) {
 	for {
 		<-time.After(10 * time.Second)
-		go printOrders()
+		go printOrders(summary)
 	}
 }
 
-func printOrders() {
+func printOrders(summary bool) {
 	orders := getAllOrders()
 	fmt.Println("Order status:")
 	for order := range orders {
 		beverageCount := numBeverages(orders[order])
 		orderDetails := getOrder(orders[order])
-		fmt.Printf("%v for %v: completions %v\n", orderDetails.Product, orderDetails.Name, beverageCount)
+		if !summary || beverageCount != 1 {
+			fmt.Printf("%v: %v for %v: completions %v\n", orderDetails.OrderID, orderDetails.Product, orderDetails.Name, beverageCount)
+		}
 	}
 }
 

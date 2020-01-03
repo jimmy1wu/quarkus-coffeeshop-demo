@@ -33,6 +33,7 @@ func main() {
 	order := flag.Bool("order", false, "Orders should be placed")
 	name := flag.String("name", "Demo", "Name of person ordering coffee")
 	consume := flag.Bool("monitor", false, "Queue should be monitored")
+	summary := flag.Bool("summary", false, "Only summarise outstanding and duplicated ordres")
 	flag.Parse()
 
 	var wg sync.WaitGroup
@@ -45,7 +46,7 @@ func main() {
 		wg.Add(1)
 		go consumeCoffee(*baseURL, &wg)
 		wg.Add(1)
-		go monitorOrders(&wg)
+		go monitorOrders(&wg, *summary)
 	}
 
 	wg.Wait()
