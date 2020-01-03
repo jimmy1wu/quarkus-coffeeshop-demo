@@ -19,10 +19,10 @@ spec:
           brokers:
           - broker: 0
             nodePort: 32000
-            advertisedHost: localhost
+            advertisedHost: 192.168.39.46
           - broker: 1
             nodePort: 32001
-            advertisedHost: localhost
+            advertisedHost: 192.168.39.46
     config:
       offsets.topic.replication.factor: 1
       transaction.state.log.replication.factor: 1

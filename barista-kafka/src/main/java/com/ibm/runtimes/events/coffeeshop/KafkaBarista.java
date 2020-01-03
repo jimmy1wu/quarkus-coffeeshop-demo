@@ -22,6 +22,8 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.eclipse.microprofile.reactive.streams.operators.ReactiveStreams;
 import org.reactivestreams.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 public class KafkaBarista {
@@ -29,6 +31,8 @@ public class KafkaBarista {
     @Inject
     @ConfigProperty(name = "mp.messaging.incoming.completed.group.id")
     String name;
+
+    private static Logger logger = LoggerFactory.getLogger(KafkaBarista.class);
 
     private Random random = new Random();
 
@@ -42,7 +46,7 @@ public class KafkaBarista {
         return ReactiveStreams.<Message<String>>builder().filter(message -> {
             Order order = jsonb.fromJson(message.getPayload(), Order.class);
             if (completedOrders.contains(order)) {
-                System.out.println("Order " + order.getOrderId() + " already completed, filtering.");
+                logger.debug("Order " + order.getOrderId() + " already completed, filtering.");
                 return false;
             }
             message.ack();
@@ -54,9 +58,10 @@ public class KafkaBarista {
     @Outgoing("queue")
     public CompletionStage<String> prepare(String message) {
         Order order = jsonb.fromJson(message, Order.class);
-        System.out.println("Barista " + name + " is going to prepare a " + order.getProduct());
+        logger.debug("Barista " + name + " has received order " + order.getOrderId());
         return makeIt(order)
                 .thenApply(beverage -> PreparationState.ready(order, beverage));
+                
     }
 
     @Incoming("completed")
@@ -69,8 +74,8 @@ public class KafkaBarista {
 
     private CompletionStage<Beverage> makeIt(Order order) {
         return CompletableFuture.supplyAsync(() -> {
-            System.out.println("Preparing a " + order.getProduct());
             prepareCoffee();
+            logger.debug("Order " + order.getOrderId() + " completed");
             return new Beverage(order, name);
         }, executor);
     }
