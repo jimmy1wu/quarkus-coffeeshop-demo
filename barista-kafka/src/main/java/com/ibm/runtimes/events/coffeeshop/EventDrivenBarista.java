@@ -1,0 +1,68 @@
+package com.ibm.runtimes.events.coffeeshop;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Executor;
+
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+
+import com.ibm.runtimes.events.coffeeshop.PreparationState.State;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class EventDrivenBarista {
+
+    private static Logger logger = LoggerFactory.getLogger(EventDrivenBarista.class);
+    private Jsonb jsonb = JsonbBuilder.create();
+    private EventEmitter emitter;
+    private Executor executor;
+    private Set<Order> completedOrders = Collections.synchronizedSet(new HashSet<Order>());
+
+    public EventDrivenBarista(EventEmitter emitter, Executor executor) {
+        this.emitter = emitter;
+        this.executor = executor;
+    }
+
+    public void handle(CoffeeEventType type, String message) {
+        if (type == CoffeeEventType.BEVERAGE) {
+            PreparationState result = jsonb.fromJson(message, PreparationState.class);
+            if (result.getState() == State.READY) {
+                completedOrders.add(result.getOrder());
+            }
+        }
+
+        if (type == CoffeeEventType.ORDER) {
+
+            Order order = jsonb.fromJson(message, Order.class);
+            if (completedOrders.contains(order)) {
+                logger.debug("Order " + order.getOrderId() + " has already been completed, skipping");
+                return;
+            }
+            logger.debug("Barista Fred has received order " + order.getOrderId());
+            makeIt(order).thenApply(beverage -> PreparationState.ready(order, beverage))
+                    .thenAccept(result -> emitter.sendEvent(result));
+        }
+    }
+
+    private CompletionStage<Beverage> makeIt(Order order) {
+        return CompletableFuture.supplyAsync(() -> {
+            prepareCoffee();
+            logger.debug("Order " + order.getOrderId() + " completed");
+            completedOrders.add(order);
+            return new Beverage(order, "Fred");
+        }, executor);
+    }
+
+    private void prepareCoffee() {
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
