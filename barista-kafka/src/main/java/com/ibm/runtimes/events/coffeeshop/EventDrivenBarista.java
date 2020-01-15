@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
 import javax.json.bind.Jsonb;
@@ -30,22 +31,34 @@ public class EventDrivenBarista {
 
     public void handle(CoffeeEventType type, String message) {
         if (type == CoffeeEventType.BEVERAGE) {
-            PreparationState result = jsonb.fromJson(message, PreparationState.class);
-            if (result.getState() == State.READY) {
-                completedOrders.add(result.getOrder());
-            }
+            handleOrderUpdate(message);
         }
 
         if (type == CoffeeEventType.ORDER) {
+            handleIncomingOrder(message);
+        }
+    }
 
-            Order order = jsonb.fromJson(message, Order.class);
-            if (completedOrders.contains(order)) {
-                logger.debug("Order " + order.getOrderId() + " has already been completed, skipping");
-                return;
-            }
+    private void handleIncomingOrder(String message) {
+        Order order = jsonb.fromJson(message, Order.class);
+        if (completedOrders.contains(order)) {
+            logger.debug("Order " + order.getOrderId() + " has already been completed, skipping");
+        } else {
             logger.debug("Barista Fred has received order " + order.getOrderId());
-            makeIt(order).thenApply(beverage -> PreparationState.ready(order, beverage))
-                    .thenAccept(result -> emitter.sendEvent(result));
+            makeIt(order).thenApply(beverage -> PreparationState.ready(order, beverage)).thenAccept(result -> {
+                try {
+                    emitter.sendEvent(result);
+                } catch (InterruptedException | ExecutionException e) {
+                    logger.error("Failed to emit event",e);
+                }
+            });
+        }
+    }
+
+    private void handleOrderUpdate(String message) {
+        PreparationState result = jsonb.fromJson(message, PreparationState.class);
+        if (result.getState() == State.READY) {
+            completedOrders.add(result.getOrder());
         }
     }
 

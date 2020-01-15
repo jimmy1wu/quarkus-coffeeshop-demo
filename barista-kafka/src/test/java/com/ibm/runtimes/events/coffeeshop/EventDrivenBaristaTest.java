@@ -4,14 +4,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
 import org.junit.jupiter.api.Test;
 
 public class EventDrivenBaristaTest {
 
+    public void shouldListenForOrders() {
+        
+    }
+
     @Test
-    public void shouldMakeCoffee() {
+    public void shouldMakeCoffee() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
         EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor());
        
@@ -21,7 +26,7 @@ public class EventDrivenBaristaTest {
     }
 
     @Test
-    public void shouldOnlyPrepareOrderOnceGivenMultipleOrderMessages() {
+    public void shouldOnlyPrepareOrderOnceGivenMultipleOrderMessages() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
         EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor());
        
@@ -33,7 +38,7 @@ public class EventDrivenBaristaTest {
     }
 
     @Test
-    public void shouldNotPrepareOrderIfSomeoneElsePreparedItAlready() {
+    public void shouldNotPrepareOrderIfSomeoneElsePreparedItAlready() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
         EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor());
        
