@@ -16,7 +16,7 @@ import com.ibm.runtimes.events.coffeeshop.PreparationState.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EventDrivenBarista {
+public class EventDrivenBarista implements EventHandler {
 
     private static Logger logger = LoggerFactory.getLogger(EventDrivenBarista.class);
     private Jsonb jsonb = JsonbBuilder.create();
@@ -24,9 +24,10 @@ public class EventDrivenBarista {
     private Executor executor;
     private Set<Order> completedOrders = Collections.synchronizedSet(new HashSet<Order>());
 
-    public EventDrivenBarista(EventEmitter emitter, Executor executor) {
+    public EventDrivenBarista(EventEmitter emitter, Executor executor, EventSource source) {
         this.emitter = emitter;
         this.executor = executor;
+        source.subscribeToTopic("orders", CoffeeEventType.ORDER, this);
     }
 
     public void handle(CoffeeEventType type, String message) {

@@ -11,14 +11,19 @@ import org.junit.jupiter.api.Test;
 
 public class EventDrivenBaristaTest {
 
-    public void shouldListenForOrders() {
+    private EventSource source = mock(EventSource.class);
+
+    @Test
+    public void shouldSubscribeToOrdersTopicUsingEventSource() {
+        EventDrivenBarista testable = new EventDrivenBarista(null, new SynchronousExecutor(), source);
         
+        verify(source).subscribeToTopic("orders", CoffeeEventType.ORDER, testable);
     }
 
     @Test
     public void shouldMakeCoffee() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
-        EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor());
+        EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor(), source);
        
         barista.handle(CoffeeEventType.ORDER, "{\"name\":\"Demo-1\",\"orderId\":\"22929b18-9116-4125-8141-07855b992219\",\"product\":\"espresso\"}");
 
@@ -28,7 +33,7 @@ public class EventDrivenBaristaTest {
     @Test
     public void shouldOnlyPrepareOrderOnceGivenMultipleOrderMessages() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
-        EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor());
+        EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor(), source);
        
         barista.handle(CoffeeEventType.ORDER,
                 "{\"name\":\"Demo-1\",\"orderId\":\"22929b18-9116-4125-8141-07855b992219\",\"product\":\"espresso\"}");
@@ -40,7 +45,7 @@ public class EventDrivenBaristaTest {
     @Test
     public void shouldNotPrepareOrderIfSomeoneElsePreparedItAlready() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
-        EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor());
+        EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor(), source);
        
         barista.handle(CoffeeEventType.BEVERAGE, "{\"beverage\":{\"beverage\":\"espresso\",\"customer\":\"Demo-1\",\"orderId\":\"22929b18-9116-4125-8141-07855b992219\",\"preparedBy\":\"Joe\"},\"order\":{\"name\":\"Demo-1\",\"orderId\":\"22929b18-9116-4125-8141-07855b992219\",\"product\":\"espresso\"},\"state\":\"READY\"}");
         barista.handle(CoffeeEventType.ORDER, "{\"name\":\"Demo-1\",\"orderId\":\"22929b18-9116-4125-8141-07855b992219\",\"product\":\"espresso\"}");
