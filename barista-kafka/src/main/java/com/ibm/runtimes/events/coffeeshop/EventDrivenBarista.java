@@ -28,17 +28,7 @@ public class EventDrivenBarista {
         this.emitter = emitter;
         this.executor = executor;
         source.subscribeToTopic("orders", this::handleIncomingOrder, Order.class);
-    }
-
-    public void handle(CoffeeEventType type, String message) {
-        if (type == CoffeeEventType.ORDER) {
-            Order order = jsonb.fromJson(message, Order.class);
-            handleIncomingOrder(order);
-        }
-        if (type == CoffeeEventType.BEVERAGE) {
-            PreparationState state = jsonb.fromJson(message, PreparationState.class);
-            handleOrderUpdate(state);
-        }
+        source.subscribeToTopic("queue", this::handleOrderUpdate, PreparationState.class);
     }
 
     public void handleIncomingOrder(Order order) {

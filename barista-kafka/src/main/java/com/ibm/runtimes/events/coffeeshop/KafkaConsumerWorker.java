@@ -55,16 +55,15 @@ public class KafkaConsumerWorker<T> implements Runnable
                     // Add the record that is being consumed to an offset map that will get committed to Kafka
                     Map<TopicPartition, OffsetAndMetadata> offsetmap = new HashMap<>();
                     offsetmap.put(new TopicPartition(record.topic(), record.partition()),
-                    new OffsetAndMetadata(record.offset() + 1));
+                    new OffsetAndMetadata(record.offset()));
 
             
                     System.out.printf("%s received: %s%n", this.consumerName, record.value());
 
-                    // Commit offset as soon as it is consumed.
+                    
+                    handler.handle(jsonb.fromJson(record.value(), eventType));
                     consumer.commitSync(offsetmap);
                     System.out.printf("Committed %d offsets %n", offsetmap.size());
-
-                    handler.handle(jsonb.fromJson(record.value(), eventType));
                 }
             }
         } catch (Exception e){

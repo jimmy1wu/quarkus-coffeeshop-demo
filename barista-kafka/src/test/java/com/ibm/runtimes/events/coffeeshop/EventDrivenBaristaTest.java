@@ -36,6 +36,13 @@ public class EventDrivenBaristaTest {
     }
 
     @Test
+    public void shouldSubscribeToQueueTopicUsingEventSource() {
+       new EventDrivenBarista(null, new SynchronousExecutor(), source);
+        
+        verify(source).subscribeToTopic(eq("queue"), any(EventHandler.class), eq(PreparationState.class));
+    }
+
+    @Test
     public void shouldMakeCoffee() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
         EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor(), source);
