@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -13,19 +16,18 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 
-public class KafkaConsumerWorker implements Runnable
+public class KafkaConsumerWorker<T> implements Runnable
 {
     private String consumerName;
     private KafkaConsumer<String, String> consumer;
-    private EventHandler handler;
-    private CoffeeEventType eventType;
-
+    private EventHandler<T> handler;
+    private Jsonb jsonb = JsonbBuilder.create();
+    private Class<T> eventType;
     public KafkaConsumerWorker(String bootstrapServer, String consumerGroupId, String topic, String consumerName,
-            EventHandler handler, CoffeeEventType eventType) {
+            EventHandler<T> handler, Class<T> eventType) {
         this.consumerName = consumerName;
         this.handler = handler;
         this.eventType = eventType;
-        
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);        
@@ -62,7 +64,7 @@ public class KafkaConsumerWorker implements Runnable
                     consumer.commitSync(offsetmap);
                     System.out.printf("Committed %d offsets %n", offsetmap.size());
 
-                    handler.handle(eventType, record.value());
+                    handler.handle(jsonb.fromJson(record.value(), eventType));
                 }
             }
         } catch (Exception e){

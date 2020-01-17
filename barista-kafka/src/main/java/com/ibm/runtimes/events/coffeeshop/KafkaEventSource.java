@@ -11,8 +11,8 @@ public class KafkaEventSource implements EventSource {
 		this.brokerList = brokerList;
 	}
 
-	public void subscribeToTopic(String topic, CoffeeEventType eventType, EventHandler handler) {
-		KafkaConsumerWorker worker = new KafkaConsumerWorker(brokerList, "myConsumer", topic, "Mr. Hungry", handler, eventType);
+	public <T> void subscribeToTopic(String topic, EventHandler<T> handler, Class<T> thing) {
+		KafkaConsumerWorker<T> worker = new KafkaConsumerWorker<T>(brokerList, "myConsumer", topic, "Mr. Hungry", handler, thing);
 		Executors.newSingleThreadExecutor().submit(worker);
 	}
 

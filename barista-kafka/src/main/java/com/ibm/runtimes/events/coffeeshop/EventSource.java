@@ -2,6 +2,6 @@ package com.ibm.runtimes.events.coffeeshop;
 
 public interface EventSource {
 
-	 void subscribeToTopic(String topicName, CoffeeEventType eventType, EventHandler handler);
+	 <T> void subscribeToTopic(String topicName, EventHandler<T> handler, Class<T> type);
 
 }

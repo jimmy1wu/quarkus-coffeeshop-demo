@@ -16,7 +16,7 @@ import com.ibm.runtimes.events.coffeeshop.PreparationState.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EventDrivenBarista implements EventHandler {
+public class EventDrivenBarista {
 
     private static Logger logger = LoggerFactory.getLogger(EventDrivenBarista.class);
     private Jsonb jsonb = JsonbBuilder.create();
@@ -27,21 +27,21 @@ public class EventDrivenBarista implements EventHandler {
     public EventDrivenBarista(EventEmitter emitter, Executor executor, EventSource source) {
         this.emitter = emitter;
         this.executor = executor;
-        source.subscribeToTopic("orders", CoffeeEventType.ORDER, this);
+        source.subscribeToTopic("orders", this::handleIncomingOrder, Order.class);
     }
 
     public void handle(CoffeeEventType type, String message) {
-        if (type == CoffeeEventType.BEVERAGE) {
-            handleOrderUpdate(message);
-        }
-
         if (type == CoffeeEventType.ORDER) {
-            handleIncomingOrder(message);
+            Order order = jsonb.fromJson(message, Order.class);
+            handleIncomingOrder(order);
+        }
+        if (type == CoffeeEventType.BEVERAGE) {
+            PreparationState state = jsonb.fromJson(message, PreparationState.class);
+            handleOrderUpdate(state);
         }
     }
 
-    private void handleIncomingOrder(String message) {
-        Order order = jsonb.fromJson(message, Order.class);
+    public void handleIncomingOrder(Order order) {
         if (completedOrders.contains(order)) {
             logger.debug("Order " + order.getOrderId() + " has already been completed, skipping");
         } else {
@@ -56,8 +56,7 @@ public class EventDrivenBarista implements EventHandler {
         }
     }
 
-    private void handleOrderUpdate(String message) {
-        PreparationState result = jsonb.fromJson(message, PreparationState.class);
+    public void handleOrderUpdate(PreparationState result) {
         if (result.getState() == State.READY) {
             completedOrders.add(result.getOrder());
         }

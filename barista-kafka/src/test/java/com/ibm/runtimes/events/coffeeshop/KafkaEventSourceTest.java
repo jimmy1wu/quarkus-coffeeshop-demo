@@ -1,20 +1,10 @@
 package com.ibm.runtimes.events.coffeeshop;
 
 import static net.mguenther.kafka.junit.EmbeddedKafkaCluster.provisionWith;
+import static net.mguenther.kafka.junit.SendValues.to;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-
-import java.util.List;
-
-import static net.mguenther.kafka.junit.SendValues.to;
-import static net.mguenther.kafka.junit.ReadKeyValues.from;
-
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +16,7 @@ import net.mguenther.kafka.junit.EmbeddedKafkaClusterConfig;
 import net.mguenther.kafka.junit.EmbeddedKafkaConfig;
 
 public class KafkaEventSourceTest {
-    private static final String EVENT_DATA = "event-data";
+    private static final String EVENT_DATA = "{\"name\":\"Demo-1\", \"orderId\":\"1\", \"product\":\"espresso\"}";
     private static final String TOPIC_NAME = "orders";
     private EmbeddedKafkaCluster kafkaBroker;
 
@@ -48,11 +38,26 @@ public class KafkaEventSourceTest {
     @Test
     public void shouldDeliverEventToHandler() throws InterruptedException {
         KafkaEventSource testable = new KafkaEventSource(kafkaBroker.getBrokerList());
-        EventHandler handler = mock(EventHandler.class);
+        EventHandler<Order> handler = (EventHandler<Order>) mock(EventHandler.class);
         
-        testable.subscribeToTopic(TOPIC_NAME,CoffeeEventType.ORDER,handler);
+        testable.subscribeToTopic(TOPIC_NAME, handler, Order.class);
         kafkaBroker.send(to(TOPIC_NAME,EVENT_DATA).useDefaults());
         
-        verify(handler, timeout(5000)).handle(CoffeeEventType.ORDER, EVENT_DATA);
+        Order expectedEvent = new Order();
+        expectedEvent.setName("Demo-1");
+        expectedEvent.setOrderId("1");
+        expectedEvent.setProduct("espresso");
+        verify(handler, timeout(5000)).handle(expectedEvent);
+    }
+
+    public class Thing {
+        String name;
+
+        public Thing() {
+            
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 }
