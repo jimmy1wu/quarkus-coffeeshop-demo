@@ -1,21 +1,26 @@
 package com.ibm.runtimes.events.coffeeshop;
 
 import static net.mguenther.kafka.junit.EmbeddedKafkaCluster.provisionWith;
-import static net.mguenther.kafka.junit.SendValues.to;
 import static net.mguenther.kafka.junit.ObserveKeyValues.on;
-import static org.mockito.ArgumentMatchers.isNull;
+import static net.mguenther.kafka.junit.SendValues.to;
+import static net.mguenther.kafka.junit.ReadKeyValues.from;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.time.Duration;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
+
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -29,11 +34,13 @@ import kafka.server.KafkaConfig;
 import net.mguenther.kafka.junit.EmbeddedKafkaCluster;
 import net.mguenther.kafka.junit.EmbeddedKafkaClusterConfig;
 import net.mguenther.kafka.junit.EmbeddedKafkaConfig;
+import net.mguenther.kafka.junit.TopicConfig;
 
 public class KafkaEventSourceTest {
     private static final String EVENT_DATA = "{\"name\":\"Demo-1\", \"orderId\":\"1\", \"product\":\"espresso\"}";
     private static final String TOPIC_NAME = "orders";
     private EmbeddedKafkaCluster kafkaBroker;
+    private Jsonb jsonb = JsonbBuilder.create();
 
     @BeforeEach
     public void setupKafka() {
@@ -92,6 +99,59 @@ public class KafkaEventSourceTest {
         assertThat(observer.getCommittedOffset(), is(equalTo(0L)));
     }
 
+    @Test
+    public void shouldNotReplayMessagesAfterRebalance() throws InterruptedException {
+        kafkaBroker.createTopic(TopicConfig.forTopic(TOPIC_NAME).withNumberOfPartitions(2).build());
+        kafkaBroker.send(to(TOPIC_NAME, 
+                            makeOrderJson("pig"), 
+                            makeOrderJson("cow"),
+                            makeOrderJson("sheep"),
+                            makeOrderJson("chicken"),
+                            makeOrderJson("dog"),
+                            makeOrderJson("cat"))
+                            .useDefaults());
+
+        // Used to control the number of events the handler will consume
+        Semaphore sem = new Semaphore(4);
+        // Used to synchronise the test with handler
+        //CountDownLatch latch = new CountDownLatch(4);
+
+        KafkaEventSource testable = new KafkaEventSource(kafkaBroker.getBrokerList());
+        List<Order> processedMessages = new ArrayList<>();
+
+        testable.subscribeToTopic(TOPIC_NAME, order -> {
+            try {
+                sem.acquire();
+                processedMessages.add(order);
+                //latch.countDown();
+            } catch (InterruptedException e) {
+               throw new RuntimeException(e);
+            }
+        }, Order.class);
+
+        kafkaBroker.observe(on(TOPIC_NAME,4).useDefaults());
+        //latch.await();
+        assertThat(processedMessages,hasSize(4));
+
+        kafkaBroker.readValues(from(TOPIC_NAME).with(ConsumerConfig.GROUP_ID_CONFIG, "myConsumer").build());
+
+        sem.release();
+        sem.release();
+        sem.release();
+        sem.release();
+
+        Thread.sleep(1000);
+
+        assertThat(processedMessages,hasSize(6));
+
+    }
+
+    private String makeOrderJson(String name) {
+        Order order = new Order();
+        order.setName(name);
+        return jsonb.toJson(order);
+    }
+
     class CommittedOffsetObserver {
 
         private KafkaConsumer<String,String> consumer;
@@ -118,6 +178,8 @@ public class KafkaEventSourceTest {
             if (data == null) return -1;
             return data.offset();
         }
+
+
     }
 
     public class Thing {
