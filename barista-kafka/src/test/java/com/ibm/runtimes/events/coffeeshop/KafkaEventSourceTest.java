@@ -19,12 +19,12 @@ import java.util.concurrent.CountDownLatch;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import kafka.common.OffsetAndMetadata;
 import kafka.server.KafkaConfig;
 import net.mguenther.kafka.junit.EmbeddedKafkaCluster;
 import net.mguenther.kafka.junit.EmbeddedKafkaClusterConfig;
@@ -79,28 +79,45 @@ public class KafkaEventSourceTest {
         
         kafkaBroker.send(to(TOPIC_NAME, EVENT_DATA).useDefaults());
         kafkaBroker.observe(on(TOPIC_NAME,1).useDefaults());
-        Properties props = new Properties();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBroker.getBrokerList());
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "myConsumer");        
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-       
-        props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        KafkaConsumer<String,String> offsetCheckConsumer = new KafkaConsumer<>(props);
-        offsetCheckConsumer.subscribe(Collections.singletonList(TOPIC_NAME));
+        CommittedOffsetObserver observer = new CommittedOffsetObserver(kafkaBroker.getBrokerList(), TOPIC_NAME, "myConsumer");
 
+        // Before we allow the handler function to complete, there should be no committed offset
+        assertThat(observer.getCommittedOffset(), is(equalTo(-1L)));
         
-        assertThat(offsetCheckConsumer.committed(new TopicPartition(TOPIC_NAME, 0)), is(nullValue()));
-        
+        // Release the handler function
         latch.countDown();
 
         Thread.sleep(1000);
 
-        assertThat(offsetCheckConsumer.committed(new TopicPartition(TOPIC_NAME, 0)), is(notNullValue()));
-        assertThat(offsetCheckConsumer.committed(new TopicPartition(TOPIC_NAME, 0)).offset(), is(equalTo(0L)));
+        assertThat(observer.getCommittedOffset(), is(equalTo(0L)));
+    }
+
+    class CommittedOffsetObserver {
+
+        private KafkaConsumer<String,String> consumer;
+        private String topic;
+
+        CommittedOffsetObserver(String brokerList, String topic, String consumerGroup) {
+            this.topic = topic;
+            Properties props = new Properties();
+            props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerList);
+            props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);        
+            props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+            props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+            props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+           
+            props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
+            props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
+            props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+            consumer = new KafkaConsumer<>(props);
+            consumer.subscribe(Collections.singletonList(topic));
+        }
+
+        long getCommittedOffset() {
+            OffsetAndMetadata data = consumer.committed(new TopicPartition(topic,0));
+            if (data == null) return -1;
+            return data.offset();
+        }
     }
 
     public class Thing {
