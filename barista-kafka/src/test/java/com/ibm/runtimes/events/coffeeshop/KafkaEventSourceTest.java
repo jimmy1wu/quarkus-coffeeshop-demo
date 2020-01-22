@@ -86,17 +86,16 @@ public class KafkaEventSourceTest {
         
         kafkaBroker.send(to(TOPIC_NAME, EVENT_DATA).useDefaults());
         kafkaBroker.observe(on(TOPIC_NAME,1).useDefaults());
-        CommittedOffsetObserver observer = new CommittedOffsetObserver(kafkaBroker.getBrokerList(), TOPIC_NAME, "myConsumer");
 
         // Before we allow the handler function to complete, there should be no committed offset
-        assertThat(observer.getCommittedOffset(), is(equalTo(-1L)));
+        assertThat(testable.getCommittedOffset(TOPIC_NAME,0),is(equalTo(-1L)));
         
         // Release the handler function
         latch.countDown();
 
-        Thread.sleep(1000);
+        Thread.sleep(20000);
 
-        assertThat(observer.getCommittedOffset(), is(equalTo(0L)));
+        assertThat(testable.getCommittedOffset(TOPIC_NAME,0),is(equalTo(0L)));
     }
 
     @Test
@@ -114,7 +113,7 @@ public class KafkaEventSourceTest {
         // Used to control the number of events the handler will consume
         Semaphore sem = new Semaphore(4);
         // Used to synchronise the test with handler
-        //CountDownLatch latch = new CountDownLatch(4);
+        CountDownLatch latch = new CountDownLatch(4);
 
         KafkaEventSource testable = new KafkaEventSource(kafkaBroker.getBrokerList());
         List<Order> processedMessages = new ArrayList<>();
@@ -123,14 +122,14 @@ public class KafkaEventSourceTest {
             try {
                 sem.acquire();
                 processedMessages.add(order);
-                //latch.countDown();
+                latch.countDown();
             } catch (InterruptedException e) {
                throw new RuntimeException(e);
             }
         }, Order.class);
 
-        kafkaBroker.observe(on(TOPIC_NAME,4).useDefaults());
-        //latch.await();
+        //kafkaBroker.observe(on(TOPIC_NAME,4).useDefaults());
+        latch.await();
         assertThat(processedMessages,hasSize(4));
 
         kafkaBroker.readValues(from(TOPIC_NAME).with(ConsumerConfig.GROUP_ID_CONFIG, "myConsumer").build());
@@ -142,6 +141,7 @@ public class KafkaEventSourceTest {
 
         Thread.sleep(1000);
 
+        System.out.println(processedMessages);
         assertThat(processedMessages,hasSize(6));
 
     }
@@ -149,6 +149,7 @@ public class KafkaEventSourceTest {
     private String makeOrderJson(String name) {
         Order order = new Order();
         order.setName(name);
+        order.setOrderId(name);
         return jsonb.toJson(order);
     }
 
