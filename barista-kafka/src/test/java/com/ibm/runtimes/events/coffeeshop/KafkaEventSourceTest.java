@@ -1,5 +1,7 @@
 package com.ibm.runtimes.events.coffeeshop;
 
+import static net.mguenther.kafka.junit.EmbeddedKafkaCluster.provisionWith;
+import static net.mguenther.kafka.junit.EmbeddedKafkaClusterConfig.useDefaults;
 import static net.mguenther.kafka.junit.ObserveKeyValues.on;
 import static net.mguenther.kafka.junit.SendValues.to;
 import static net.mguenther.kafka.junit.ReadKeyValues.from;
@@ -24,6 +26,7 @@ import java.util.function.Supplier;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 
+import kafka.server.KafkaConfig;
 import net.mguenther.kafka.junit.*;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -37,7 +40,7 @@ import org.junit.jupiter.api.Test;
 public class KafkaEventSourceTest {
     private static final String EVENT_DATA = "{\"name\":\"Demo-1\", \"orderId\":\"1\", \"product\":\"espresso\"}";
     private static final String TOPIC_NAME = "orders";
-    private ExternalKafkaCluster kafkaBroker;
+    private EmbeddedKafkaCluster kafkaBroker;
     private Jsonb jsonb = JsonbBuilder.create();
     private KafkaEventSource testable;
     private static String LOCAL_KAFKA_BOOTSTRAP_SERVER = "localhost:9092";
@@ -45,11 +48,9 @@ public class KafkaEventSourceTest {
 
     @BeforeEach
     public void setupKafka() throws InterruptedException {
-        kafkaBroker = ExternalKafkaCluster.at(LOCAL_KAFKA_BOOTSTRAP_SERVER, "localhost:2181");
-        if (kafkaBroker.exists(TOPIC_NAME)) {
-            kafkaBroker.deleteTopic(TOPIC_NAME);
-            assertThatEventually(() -> kafkaBroker.exists(TOPIC_NAME), is(false), Duration.ofSeconds(5));
-        }
+        kafkaBroker = provisionWith(useDefaults());
+        kafkaBroker.start();
+        LOCAL_KAFKA_BOOTSTRAP_SERVER = kafkaBroker.getBrokerList();
         adminClient = createAdminClient();
     }
 
@@ -58,6 +59,7 @@ public class KafkaEventSourceTest {
         if (testable != null) {
             testable.close();
         }
+        kafkaBroker.stop();
     }
 
     @Test
