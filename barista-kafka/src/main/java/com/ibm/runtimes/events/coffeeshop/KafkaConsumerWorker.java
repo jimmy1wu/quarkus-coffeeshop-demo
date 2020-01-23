@@ -32,9 +32,17 @@ public class KafkaConsumerWorker<T> implements Runnable, ConsumerRebalanceListen
         this.handler = handler;
         this.eventType = eventType;
         this.topic = topic;
+        Properties props = getConsumerConfig(bootstrapServer, consumerGroupId);
+        this.consumer = new KafkaConsumer<>(props);
+        this.consumer.subscribe(Collections.singletonList(topic), this);
+        messageQueue = new LinkedBlockingQueue<>();
+        executor = Executors.newSingleThreadExecutor();
+    }
+
+    private Properties getConsumerConfig(String bootstrapServer, String consumerGroupId) {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);        
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
@@ -43,10 +51,7 @@ public class KafkaConsumerWorker<T> implements Runnable, ConsumerRebalanceListen
         props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        this.consumer = new KafkaConsumer<>(props);
-        this.consumer.subscribe(Arrays.asList(topic), this);
-        messageQueue = new LinkedBlockingQueue<>();
-        executor = Executors.newSingleThreadExecutor();
+        return props;
     }
 
     public void run() {
@@ -54,23 +59,29 @@ public class KafkaConsumerWorker<T> implements Runnable, ConsumerRebalanceListen
             executor.submit(this::processMessages);
 
             while (true) {
-
                 ConsumerRecords<String, String> records = this.consumer.poll(Duration.ofSeconds(7));
                 logger.debug("Consuming {} records \n", records.count());
-
-                for (ConsumerRecord<String, String> record : records) {
-                    logger.debug("{} received partition {} offset {}: {} \n", this.consumerName, record.partition(), record.offset(), record.value());
-                    messageQueue.put(record);
-                    logger.debug("Message added, queue now contains {} messages", messageQueue.size());
-                }
-                consumer.commitSync(offsetMap);
-                for (Map.Entry<TopicPartition,OffsetAndMetadata> commmitEntry: offsetMap.entrySet()) {
-                    logger.debug("Committed partition {} offset {} \n", commmitEntry.getKey().partition(), commmitEntry.getValue().offset());
-                }
+                deliverMessagesToHandler(records);
+                commitProcessedOffsets();
             }
         } catch (Exception e){
             e.printStackTrace();
             this.consumer.close();
+        }
+    }
+
+    private void commitProcessedOffsets() {
+        consumer.commitSync(offsetMap);
+        for (Map.Entry<TopicPartition, OffsetAndMetadata> commmitEntry: offsetMap.entrySet()) {
+            logger.debug("Committed partition {} offset {} \n", commmitEntry.getKey().partition(), commmitEntry.getValue().offset());
+        }
+    }
+
+    private void deliverMessagesToHandler(ConsumerRecords<String, String> records) throws InterruptedException {
+        for (ConsumerRecord<String, String> record : records) {
+            logger.debug("{} received partition {} offset {}: {} \n", this.consumerName, record.partition(), record.offset(), record.value());
+            messageQueue.put(record);
+            logger.debug("Message added, queue now contains {} messages", messageQueue.size());
         }
     }
 
@@ -91,7 +102,6 @@ public class KafkaConsumerWorker<T> implements Runnable, ConsumerRebalanceListen
                 offsetMap.put(tp,new OffsetAndMetadata(record.offset() + 1));
             } catch (InterruptedException e) {
                 logger.error("Interrupted while taking message from message queue", e);
-                continue;
             }
         }
     }
