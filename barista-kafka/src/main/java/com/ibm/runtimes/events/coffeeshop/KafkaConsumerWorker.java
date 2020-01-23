@@ -2,20 +2,18 @@ package com.ibm.runtimes.events.coffeeshop;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.internals.Topic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class KafkaConsumerWorker<T> implements Runnable
+public class KafkaConsumerWorker<T> implements Runnable, ConsumerRebalanceListener
 {
     private final String topic;
     private ExecutorService executor;
@@ -25,6 +23,8 @@ public class KafkaConsumerWorker<T> implements Runnable
     private Jsonb jsonb = JsonbBuilder.create();
     private Class<T> eventType;
     private Map<TopicPartition, OffsetAndMetadata> offsetMap = Collections.synchronizedMap(new HashMap<>());
+    private final BlockingQueue<ConsumerRecord<String, String>> messageQueue;
+    private static Logger logger = LoggerFactory.getLogger(KafkaConsumerWorker.class);
 
     public KafkaConsumerWorker(String bootstrapServer, String consumerGroupId, String topic, String consumerName,
             EventHandler<T> handler, Class<T> eventType) {
@@ -44,31 +44,28 @@ public class KafkaConsumerWorker<T> implements Runnable
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         this.consumer = new KafkaConsumer<>(props);
-        this.consumer.subscribe(Arrays.asList(topic));
+        this.consumer.subscribe(Arrays.asList(topic), this);
+        messageQueue = new LinkedBlockingQueue<>();
         executor = Executors.newSingleThreadExecutor();
     }
 
     public void run() {
         try {
+            executor.submit(this::processMessages);
+
             while (true) {
 
                 ConsumerRecords<String, String> records = this.consumer.poll(Duration.ofSeconds(7));
-                System.out.printf("Consuming %d records %n", records.count());
+                logger.debug("Consuming {} records \n", records.count());
 
                 for (ConsumerRecord<String, String> record : records) {
-                    System.out.printf("%s received partition %d offset %d: %s \n", this.consumerName, record.partition(), record.offset(), record.value());
-
-                    executor.submit(() -> {
-                        handler.handle(jsonb.fromJson(record.value(), eventType));
-                        System.out.println("Event handler processed event: " + record.value());
-                        offsetMap.put(new TopicPartition(record.topic(), record.partition()),
-                                new OffsetAndMetadata(record.offset()+1));
-                    });
-
+                    logger.debug("{} received partition {} offset {}: {} \n", this.consumerName, record.partition(), record.offset(), record.value());
+                    messageQueue.put(record);
+                    logger.debug("Message added, queue now contains {} messages", messageQueue.size());
                 }
                 consumer.commitSync(offsetMap);
                 for (Map.Entry<TopicPartition,OffsetAndMetadata> commmitEntry: offsetMap.entrySet()) {
-                    System.out.printf("Committed partition %d offset %d \n", commmitEntry.getKey().partition(), commmitEntry.getValue().offset());
+                    logger.debug("Committed partition {} offset {} \n", commmitEntry.getKey().partition(), commmitEntry.getValue().offset());
                 }
             }
         } catch (Exception e){
@@ -77,7 +74,39 @@ public class KafkaConsumerWorker<T> implements Runnable
         }
     }
 
+    public void processMessages() {
+        logger.debug("Starting message processor thread");
+        while (true) {
+            try {
+                ConsumerRecord<String, String> record  = messageQueue.take();
+                TopicPartition tp = new TopicPartition(record.topic(), record.partition());
+                logger.debug("Message removed, queue now contains {} messages", messageQueue.size());
+                OffsetAndMetadata result = offsetMap.get(tp);
+                if (result != null && result.offset() > record.offset()) {
+                    logger.debug("Already processed message from partition {} offset {}, skipping", record.partition(), record.offset());
+                    continue;
+                }
+                handler.handle(jsonb.fromJson(record.value(), eventType));
+                logger.debug("Event handler processed event: {} \n", record.value());
+                offsetMap.put(tp,new OffsetAndMetadata(record.offset() + 1));
+            } catch (InterruptedException e) {
+                logger.error("Interrupted while taking message from message queue", e);
+                continue;
+            }
+        }
+    }
     public void close() {
         this.consumer.wakeup();
+    }
+
+    @Override
+    public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
+        logger.debug("Partition revoked, clearing message queue");
+        messageQueue.clear();
+    }
+
+    @Override
+    public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
+
     }
 }

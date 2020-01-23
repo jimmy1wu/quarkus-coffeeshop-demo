@@ -132,7 +132,7 @@ public class KafkaEventSourceTest {
 
         triggerRebalanceAndConsumeRemainingMessages(sem);
 
-        assertThat(processedMessages, hasSize(6));
+        assertThat(processedMessages, hasSize(3));
     }
 
     private void setupTopicWith6Messages() throws InterruptedException {
