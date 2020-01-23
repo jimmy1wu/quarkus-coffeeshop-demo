@@ -92,11 +92,10 @@ public class KafkaConsumerWorker<T> implements Runnable, ConsumerRebalanceListen
                 ConsumerRecord<String, String> record  = messageQueue.take();
                 TopicPartition tp = new TopicPartition(record.topic(), record.partition());
                 logger.debug("Message removed, queue now contains {} messages", messageQueue.size());
-                OffsetAndMetadata result = offsetMap.get(tp);
-                if (result != null && result.offset() > record.offset()) {
-                    logger.debug("Already processed message from partition {} offset {}, skipping", record.partition(), record.offset());
+
+                if (messageAlreadyProcessed(record, tp))
                     continue;
-                }
+
                 handler.handle(jsonb.fromJson(record.value(), eventType));
                 logger.debug("Event handler processed event: {} \n", record.value());
                 offsetMap.put(tp,new OffsetAndMetadata(record.offset() + 1));
@@ -105,6 +104,18 @@ public class KafkaConsumerWorker<T> implements Runnable, ConsumerRebalanceListen
             }
         }
     }
+
+    private boolean messageAlreadyProcessed(ConsumerRecord<String, String> record, TopicPartition tp) {
+        OffsetAndMetadata result = offsetMap.get(tp);
+        // If a message was being processed when a rebalance occurs, we might see the same message
+        // again if the same partition is reassigned
+        if (result != null && result.offset() > record.offset()) {
+            logger.debug("Already processed message from partition {} offset {}, skipping", record.partition(), record.offset());
+            return true;
+        }
+        return false;
+    }
+
     public void close() {
         this.consumer.wakeup();
     }
@@ -112,6 +123,7 @@ public class KafkaConsumerWorker<T> implements Runnable, ConsumerRebalanceListen
     @Override
     public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
         logger.debug("Partition revoked, clearing message queue");
+        // Clear the queue to avoid processing messages from partitions we're no longer assigne dot
         messageQueue.clear();
     }
 
