@@ -14,7 +14,7 @@ import com.ibm.runtimes.events.coffeeshop.PreparationState.State;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class EventDrivenBaristaTest {
+public class RawKafkaBaristaTest {
 
     private EventSource source = mock(EventSource.class);
 
@@ -30,14 +30,14 @@ public class EventDrivenBaristaTest {
 
     @Test
     public void shouldSubscribeToOrdersTopicUsingEventSource() {
-       new EventDrivenBarista(null, new SynchronousExecutor(), source);
+       new RawKafkaBarista(null, new SynchronousExecutor(), source);
         
         verify(source).subscribeToTopic(eq("orders"), any(EventHandler.class), eq(Order.class));
     }
 
     @Test
     public void shouldSubscribeToQueueTopicUsingEventSource() {
-       new EventDrivenBarista(null, new SynchronousExecutor(), source);
+       new RawKafkaBarista(null, new SynchronousExecutor(), source);
         
         verify(source).subscribeToTopic(eq("queue"), any(EventHandler.class), eq(PreparationState.class));
     }
@@ -45,7 +45,7 @@ public class EventDrivenBaristaTest {
     @Test
     public void shouldMakeCoffee() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
-        EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor(), source);
+        RawKafkaBarista barista = new RawKafkaBarista(emitter, new SynchronousExecutor(), source);
 
         barista.handleIncomingOrder(order);
 
@@ -55,7 +55,7 @@ public class EventDrivenBaristaTest {
     @Test
     public void shouldOnlyPrepareOrderOnceGivenMultipleOrderMessages() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
-        EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor(), source);
+        RawKafkaBarista barista = new RawKafkaBarista(emitter, new SynchronousExecutor(), source);
 
         barista.handleIncomingOrder(order);
         barista.handleIncomingOrder(order);
@@ -66,7 +66,7 @@ public class EventDrivenBaristaTest {
     @Test
     public void shouldNotPrepareOrderIfSomeoneElsePreparedItAlready() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
-        EventDrivenBarista barista = new EventDrivenBarista(emitter, new SynchronousExecutor(), source);
+        RawKafkaBarista barista = new RawKafkaBarista(emitter, new SynchronousExecutor(), source);
        
         Beverage beverage = new Beverage();
         beverage.setBeverage(order.getProduct());

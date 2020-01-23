@@ -16,15 +16,15 @@ import com.ibm.runtimes.events.coffeeshop.PreparationState.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EventDrivenBarista {
+public class RawKafkaBarista {
 
-    private static Logger logger = LoggerFactory.getLogger(EventDrivenBarista.class);
+    private static Logger logger = LoggerFactory.getLogger(RawKafkaBarista.class);
     private Jsonb jsonb = JsonbBuilder.create();
     private EventEmitter emitter;
     private Executor executor;
     private Set<Order> completedOrders = Collections.synchronizedSet(new HashSet<Order>());
 
-    public EventDrivenBarista(EventEmitter emitter, Executor executor, EventSource source) {
+    public RawKafkaBarista(EventEmitter emitter, Executor executor, EventSource source) {
         this.emitter = emitter;
         this.executor = executor;
         source.subscribeToTopic("orders", this::handleIncomingOrder, Order.class);

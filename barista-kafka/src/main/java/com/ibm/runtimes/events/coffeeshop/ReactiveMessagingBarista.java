@@ -28,13 +28,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
-public class KafkaBarista {
+public class ReactiveMessagingBarista {
 
     @Inject
     @ConfigProperty(name = "mp.messaging.incoming.completed.group.id")
     String name;
 
-    private static Logger logger = LoggerFactory.getLogger(KafkaBarista.class);
+    private static Logger logger = LoggerFactory.getLogger(ReactiveMessagingBarista.class);
 
     private Random random = new Random();
 
