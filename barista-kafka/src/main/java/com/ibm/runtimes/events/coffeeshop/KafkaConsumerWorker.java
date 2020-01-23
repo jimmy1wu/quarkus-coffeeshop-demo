@@ -1,10 +1,7 @@
 package com.ibm.runtimes.events.coffeeshop;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,7 +24,7 @@ public class KafkaConsumerWorker<T> implements Runnable
     private EventHandler<T> handler;
     private Jsonb jsonb = JsonbBuilder.create();
     private Class<T> eventType;
-    private Map<Integer,Long> committedOffsets;
+    private Map<TopicPartition, OffsetAndMetadata> offsetMap = Collections.synchronizedMap(new HashMap<>());
 
     public KafkaConsumerWorker(String bootstrapServer, String consumerGroupId, String topic, String consumerName,
             EventHandler<T> handler, Class<T> eventType) {
@@ -35,7 +32,6 @@ public class KafkaConsumerWorker<T> implements Runnable
         this.handler = handler;
         this.eventType = eventType;
         this.topic = topic;
-        committedOffsets = new HashMap<>();
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);        
@@ -65,27 +61,20 @@ public class KafkaConsumerWorker<T> implements Runnable
                     executor.submit(() -> {
                         handler.handle(jsonb.fromJson(record.value(), eventType));
                         System.out.println("Event handler processed event: " + record.value());
-                        Map<TopicPartition, OffsetAndMetadata> offsetmap = new HashMap<>();
-                        offsetmap.put(new TopicPartition(record.topic(), record.partition()),
-                                new OffsetAndMetadata(record.offset()));
-                        consumer.commitSync(offsetmap);
-                        committedOffsets.put(record.partition(),record.offset());
-                        System.out.printf("Committed parition %d offset %d \n", record.partition(), record.offset());
+                        offsetMap.put(new TopicPartition(record.topic(), record.partition()),
+                                new OffsetAndMetadata(record.offset()+1));
                     });
 
+                }
+                consumer.commitSync(offsetMap);
+                for (Map.Entry<TopicPartition,OffsetAndMetadata> commmitEntry: offsetMap.entrySet()) {
+                    System.out.printf("Committed partition %d offset %d \n", commmitEntry.getKey().partition(), commmitEntry.getValue().offset());
                 }
             }
         } catch (Exception e){
             e.printStackTrace();
             this.consumer.close();
         }
-    }
-
-    public long getCommittedOffset(int partition) {
-        if (committedOffsets.containsKey(partition)) {
-            return committedOffsets.get(partition);
-        }
-        return -1;
     }
 
     public void close() {

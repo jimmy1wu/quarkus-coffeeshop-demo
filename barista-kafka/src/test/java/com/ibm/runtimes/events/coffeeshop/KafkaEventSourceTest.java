@@ -15,42 +15,45 @@ import static org.mockito.Mockito.verify;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.function.Supplier;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 
+import net.mguenther.kafka.junit.*;
+import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.common.TopicPartition;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import kafka.server.KafkaConfig;
-import net.mguenther.kafka.junit.EmbeddedKafkaCluster;
-import net.mguenther.kafka.junit.EmbeddedKafkaClusterConfig;
-import net.mguenther.kafka.junit.EmbeddedKafkaConfig;
-import net.mguenther.kafka.junit.TopicConfig;
 
 public class KafkaEventSourceTest {
     private static final String EVENT_DATA = "{\"name\":\"Demo-1\", \"orderId\":\"1\", \"product\":\"espresso\"}";
     private static final String TOPIC_NAME = "orders";
-    private EmbeddedKafkaCluster kafkaBroker;
+    private ExternalKafkaCluster kafkaBroker;
     private Jsonb jsonb = JsonbBuilder.create();
     private KafkaEventSource testable;
+    private static String LOCAL_KAFKA_BOOTSTRAP_SERVER = "localhost:9092";
+    private AdminClient adminClient;
 
     @BeforeEach
     public void setupKafka() throws InterruptedException {
-        kafkaBroker = provisionWith(EmbeddedKafkaClusterConfig.create()
-                .provisionWith(
-                        EmbeddedKafkaConfig.create().with(KafkaConfig.AutoCreateTopicsEnableProp(), "true")
-                                                    .with(KafkaConfig.AdvertisedHostNameProp(), "localhost")
-                                                    .build())
-                .build());
-        kafkaBroker.start();
-        Thread.sleep(60000);
+        kafkaBroker = ExternalKafkaCluster.at(LOCAL_KAFKA_BOOTSTRAP_SERVER, "localhost:2181");
+        if (kafkaBroker.exists(TOPIC_NAME)) {
+            kafkaBroker.deleteTopic(TOPIC_NAME);
+            assertThatEventually(() -> kafkaBroker.exists(TOPIC_NAME), is(false), Duration.ofSeconds(5));
+        }
+        adminClient = createAdminClient();
     }
 
     @AfterEach
@@ -58,12 +61,11 @@ public class KafkaEventSourceTest {
         if (testable != null) {
             testable.close();
         }
-        kafkaBroker.stop();
     }
 
     @Test
     public void shouldDeliverEventToHandler() throws InterruptedException {
-        testable = new KafkaEventSource(kafkaBroker.getBrokerList());
+        testable = new KafkaEventSource(LOCAL_KAFKA_BOOTSTRAP_SERVER);
         EventHandler<Order> handler = (EventHandler<Order>) mock(EventHandler.class);
 
         testable.subscribeToTopic(TOPIC_NAME, handler, Order.class);
@@ -77,9 +79,13 @@ public class KafkaEventSourceTest {
     }
 
     @Test
-    public void shouldCommitAfterHandlerReturns() throws InterruptedException {
+        public void shouldCommitAfterHandlerReturns() throws InterruptedException {
+        kafkaBroker.createTopic(TopicConfig.forTopic(TOPIC_NAME).useDefaults());
+        kafkaBroker.send(to(TOPIC_NAME, EVENT_DATA).useDefaults());
+
+
         CountDownLatch latch = new CountDownLatch(1);
-        testable = new KafkaEventSource(kafkaBroker.getBrokerList());
+        testable = new KafkaEventSource(LOCAL_KAFKA_BOOTSTRAP_SERVER);
 
         testable.subscribeToTopic(TOPIC_NAME, order -> {
             try {
@@ -89,16 +95,27 @@ public class KafkaEventSourceTest {
             }
         }, Order.class);
 
-        kafkaBroker.send(to(TOPIC_NAME, EVENT_DATA).useDefaults());
-        //kafkaBroker.observe(on(TOPIC_NAME, 1).useDefaults());
-
         // Before we allow the handler function to complete, there should be no committed offset
-        assertThat(testable.getCommittedOffset(TOPIC_NAME, 0), is(equalTo(-1L)));
+        assertThat(getCommittedOffset(TOPIC_NAME, 0), is(equalTo(-1L)));
 
         // Release the handler function
         latch.countDown();
 
-        assertThatEventually(() -> testable.getCommittedOffset(TOPIC_NAME, 0), is(equalTo(0L)), Duration.ofSeconds(20));
+        assertThatEventually(() -> getCommittedOffset(TOPIC_NAME, 0), is(equalTo(1L)), Duration.ofSeconds(20));
+    }
+
+    private long getCommittedOffset(String topicName, int partition) {
+        Map<TopicPartition, OffsetAndMetadata> committedOffsets = null;
+        try {
+            committedOffsets = adminClient.listConsumerGroupOffsets("myConsumer").partitionsToOffsetAndMetadata().get();
+        } catch (InterruptedException | ExecutionException e) {
+           throw new RuntimeException(e);
+        }
+        OffsetAndMetadata result = committedOffsets.get(new TopicPartition(topicName,partition));
+        if (result == null) {
+            return -1L;
+        }
+        return result.offset();
     }
 
     @Test
@@ -110,10 +127,11 @@ public class KafkaEventSourceTest {
         // Used to synchronise the test with handler
         CountDownLatch latch = new CountDownLatch(4);
 
-        testable = new KafkaEventSource(kafkaBroker.getBrokerList());
+        testable = new KafkaEventSource(LOCAL_KAFKA_BOOTSTRAP_SERVER);
         List<Order> processedMessages = new ArrayList<>();
 
         consume4MessagesFromTopic(sem, latch, testable, processedMessages);
+        assertThatEventually(() -> getCommittedOffset(TOPIC_NAME, 0), is(equalTo(3L)), Duration.ofSeconds(20));
 
         triggerRebalanceAndConsumeRemainingMessages(sem);
 
@@ -179,4 +197,10 @@ public class KafkaEventSourceTest {
         assertThat(yieldsExpected.get(),matcher);
     }
 
+    private AdminClient createAdminClient() {
+        Properties connectionProperties = new Properties();
+        connectionProperties.put("bootstrap.servers", LOCAL_KAFKA_BOOTSTRAP_SERVER);
+        AdminClient adminClient = AdminClient.create(connectionProperties);
+        return adminClient;
+    }
 }

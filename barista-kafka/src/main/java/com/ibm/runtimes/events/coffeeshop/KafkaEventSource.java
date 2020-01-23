@@ -30,9 +30,4 @@ public class KafkaEventSource implements EventSource {
 			worker.close();
 		}
 	}
-
-
-	public long getCommittedOffset(String topicName, int partition) {
-		return workers.get(topicName).getCommittedOffset(partition);
-	}
 }
