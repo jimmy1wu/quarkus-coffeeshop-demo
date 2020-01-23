@@ -1,6 +1,5 @@
 package com.ibm.runtimes.events.coffeeshop;
 
-import static net.mguenther.kafka.junit.EmbeddedKafkaCluster.provisionWith;
 import static net.mguenther.kafka.junit.ObserveKeyValues.on;
 import static net.mguenther.kafka.junit.SendValues.to;
 import static net.mguenther.kafka.junit.ReadKeyValues.from;
@@ -34,8 +33,6 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import kafka.server.KafkaConfig;
 
 public class KafkaEventSourceTest {
     private static final String EVENT_DATA = "{\"name\":\"Demo-1\", \"orderId\":\"1\", \"product\":\"espresso\"}";
@@ -123,15 +120,15 @@ public class KafkaEventSourceTest {
         setupTopicWith6Messages();
 
         // Used to control the number of events the handler will consume
-        Semaphore sem = new Semaphore(4);
+        Semaphore sem = new Semaphore(2);
         // Used to synchronise the test with handler
-        CountDownLatch latch = new CountDownLatch(4);
+        CountDownLatch latch = new CountDownLatch(2);
 
         testable = new KafkaEventSource(LOCAL_KAFKA_BOOTSTRAP_SERVER);
         List<Order> processedMessages = new ArrayList<>();
 
-        consume4MessagesFromTopic(sem, latch, testable, processedMessages);
-        assertThatEventually(() -> getCommittedOffset(TOPIC_NAME, 0), is(equalTo(3L)), Duration.ofSeconds(20));
+        consume2MessagesFromTopic(sem, latch, testable, processedMessages);
+        assertThatEventually(() -> getCommittedOffset(TOPIC_NAME, 0), is(equalTo(2L)), Duration.ofSeconds(20));
 
         triggerRebalanceAndConsumeRemainingMessages(sem);
 
@@ -157,11 +154,13 @@ public class KafkaEventSourceTest {
         sem.release();
         sem.release();
         sem.release();
+        sem.release();
+        sem.release();
 
         Thread.sleep(1000);
     }
 
-    private void consume4MessagesFromTopic(Semaphore sem, CountDownLatch latch, KafkaEventSource testable, List<Order> processedMessages) throws InterruptedException {
+    private void consume2MessagesFromTopic(Semaphore sem, CountDownLatch latch, KafkaEventSource testable, List<Order> processedMessages) throws InterruptedException {
         testable.subscribeToTopic(TOPIC_NAME, order -> {
             try {
                 sem.acquire();
@@ -173,7 +172,7 @@ public class KafkaEventSourceTest {
         }, Order.class);
 
         latch.await();
-        assertThat(processedMessages, hasSize(4));
+        assertThat(processedMessages, hasSize(2));
     }
 
     private String makeOrderJson(String name) {
