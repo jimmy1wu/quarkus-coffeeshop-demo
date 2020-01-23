@@ -60,7 +60,7 @@ public class KafkaConsumerWorker<T> implements Runnable
                 System.out.printf("Consuming %d records %n", records.count());
 
                 for (ConsumerRecord<String, String> record : records) {
-                    System.out.printf("%s received: %s%n", this.consumerName, record.value());
+                    System.out.printf("%s received partition %d offset %d: %s \n", this.consumerName, record.partition(), record.offset(), record.value());
 
                     executor.submit(() -> {
                         handler.handle(jsonb.fromJson(record.value(), eventType));
@@ -68,8 +68,9 @@ public class KafkaConsumerWorker<T> implements Runnable
                         Map<TopicPartition, OffsetAndMetadata> offsetmap = new HashMap<>();
                         offsetmap.put(new TopicPartition(record.topic(), record.partition()),
                                 new OffsetAndMetadata(record.offset()));
+                        consumer.commitSync(offsetmap);
                         committedOffsets.put(record.partition(),record.offset());
-                        System.out.printf("Committed %d offsets\n", offsetmap.size());
+                        System.out.printf("Committed parition %d offset %d \n", record.partition(), record.offset());
                     });
 
                 }
@@ -85,5 +86,9 @@ public class KafkaConsumerWorker<T> implements Runnable
             return committedOffsets.get(partition);
         }
         return -1;
+    }
+
+    public void close() {
+        this.consumer.wakeup();
     }
 }

@@ -4,4 +4,5 @@ public interface EventSource {
 
 	 <T> void subscribeToTopic(String topicName, EventHandler<T> handler, Class<T> type);
 
+    void close();
 }

@@ -24,6 +24,13 @@ public class KafkaEventSource implements EventSource {
 		Executors.newSingleThreadExecutor().submit(worker);
 	}
 
+	@Override
+	public void close() {
+		for (KafkaConsumerWorker worker: workers.values()) {
+			worker.close();
+		}
+	}
+
 
 	public long getCommittedOffset(String topicName, int partition) {
 		return workers.get(topicName).getCommittedOffset(partition);

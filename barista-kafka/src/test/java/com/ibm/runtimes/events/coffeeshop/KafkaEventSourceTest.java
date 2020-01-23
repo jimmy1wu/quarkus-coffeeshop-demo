@@ -14,21 +14,15 @@ import static org.mockito.Mockito.verify;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.consumer.OffsetAndMetadata;
-import org.apache.kafka.common.TopicPartition;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,24 +39,31 @@ public class KafkaEventSourceTest {
     private static final String TOPIC_NAME = "orders";
     private EmbeddedKafkaCluster kafkaBroker;
     private Jsonb jsonb = JsonbBuilder.create();
+    private KafkaEventSource testable;
 
     @BeforeEach
-    public void setupKafka() {
+    public void setupKafka() throws InterruptedException {
         kafkaBroker = provisionWith(EmbeddedKafkaClusterConfig.create()
                 .provisionWith(
-                        EmbeddedKafkaConfig.create().with(KafkaConfig.AutoCreateTopicsEnableProp(), "true").build())
+                        EmbeddedKafkaConfig.create().with(KafkaConfig.AutoCreateTopicsEnableProp(), "true")
+                                                    .with(KafkaConfig.AdvertisedHostNameProp(), "localhost")
+                                                    .build())
                 .build());
         kafkaBroker.start();
+        Thread.sleep(60000);
     }
 
     @AfterEach
     public void tearDownKafka() {
+        if (testable != null) {
+            testable.close();
+        }
         kafkaBroker.stop();
     }
 
     @Test
     public void shouldDeliverEventToHandler() throws InterruptedException {
-        KafkaEventSource testable = new KafkaEventSource(kafkaBroker.getBrokerList());
+        testable = new KafkaEventSource(kafkaBroker.getBrokerList());
         EventHandler<Order> handler = (EventHandler<Order>) mock(EventHandler.class);
 
         testable.subscribeToTopic(TOPIC_NAME, handler, Order.class);
@@ -78,7 +79,7 @@ public class KafkaEventSourceTest {
     @Test
     public void shouldCommitAfterHandlerReturns() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
-        KafkaEventSource testable = new KafkaEventSource(kafkaBroker.getBrokerList());
+        testable = new KafkaEventSource(kafkaBroker.getBrokerList());
 
         testable.subscribeToTopic(TOPIC_NAME, order -> {
             try {
@@ -89,7 +90,7 @@ public class KafkaEventSourceTest {
         }, Order.class);
 
         kafkaBroker.send(to(TOPIC_NAME, EVENT_DATA).useDefaults());
-        kafkaBroker.observe(on(TOPIC_NAME, 1).useDefaults());
+        //kafkaBroker.observe(on(TOPIC_NAME, 1).useDefaults());
 
         // Before we allow the handler function to complete, there should be no committed offset
         assertThat(testable.getCommittedOffset(TOPIC_NAME, 0), is(equalTo(-1L)));
@@ -102,6 +103,24 @@ public class KafkaEventSourceTest {
 
     @Test
     public void shouldNotReplayMessagesAfterRebalance() throws InterruptedException {
+        setupTopicWith6Messages();
+
+        // Used to control the number of events the handler will consume
+        Semaphore sem = new Semaphore(4);
+        // Used to synchronise the test with handler
+        CountDownLatch latch = new CountDownLatch(4);
+
+        testable = new KafkaEventSource(kafkaBroker.getBrokerList());
+        List<Order> processedMessages = new ArrayList<>();
+
+        consume4MessagesFromTopic(sem, latch, testable, processedMessages);
+
+        triggerRebalanceAndConsumeRemainingMessages(sem);
+
+        assertThat(processedMessages, hasSize(6));
+    }
+
+    private void setupTopicWith6Messages() throws InterruptedException {
         kafkaBroker.createTopic(TopicConfig.forTopic(TOPIC_NAME).withNumberOfPartitions(2).build());
         kafkaBroker.send(to(TOPIC_NAME,
                 makeOrderJson("pig"),
@@ -111,15 +130,20 @@ public class KafkaEventSourceTest {
                 makeOrderJson("dog"),
                 makeOrderJson("cat"))
                 .useDefaults());
+    }
 
-        // Used to control the number of events the handler will consume
-        Semaphore sem = new Semaphore(4);
-        // Used to synchronise the test with handler
-        CountDownLatch latch = new CountDownLatch(4);
+    private void triggerRebalanceAndConsumeRemainingMessages(Semaphore sem) throws InterruptedException {
+        kafkaBroker.readValues(from(TOPIC_NAME).with(ConsumerConfig.GROUP_ID_CONFIG, "myConsumer").build());
 
-        KafkaEventSource testable = new KafkaEventSource(kafkaBroker.getBrokerList());
-        List<Order> processedMessages = new ArrayList<>();
+        sem.release();
+        sem.release();
+        sem.release();
+        sem.release();
 
+        Thread.sleep(1000);
+    }
+
+    private void consume4MessagesFromTopic(Semaphore sem, CountDownLatch latch, KafkaEventSource testable, List<Order> processedMessages) throws InterruptedException {
         testable.subscribeToTopic(TOPIC_NAME, order -> {
             try {
                 sem.acquire();
@@ -130,22 +154,8 @@ public class KafkaEventSourceTest {
             }
         }, Order.class);
 
-        //kafkaBroker.observe(on(TOPIC_NAME,4).useDefaults());
         latch.await();
         assertThat(processedMessages, hasSize(4));
-
-        kafkaBroker.readValues(from(TOPIC_NAME).with(ConsumerConfig.GROUP_ID_CONFIG, "myConsumer").build());
-
-        sem.release();
-        sem.release();
-        sem.release();
-        sem.release();
-
-        Thread.sleep(1000);
-
-        System.out.println(processedMessages);
-        assertThat(processedMessages, hasSize(6));
-
     }
 
     private String makeOrderJson(String name) {
