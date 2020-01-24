@@ -18,10 +18,7 @@ public class KafkaEventSource implements EventSource {
 	}
 
 	public <T> void subscribeToTopic(String topic, EventHandler<T> handler, Class<T> thing) {
-		KafkaConsumerWorker<T> worker = new KafkaConsumerWorker<T>(brokerList, "myConsumer", topic, "Mr. Hungry", handler, thing);
-		workers.put(topic,worker);
-
-		Executors.newSingleThreadExecutor().submit(worker);
+		subscribeToTopic(topic,handler,thing, "myConsumer");
 	}
 
 	@Override
@@ -29,5 +26,12 @@ public class KafkaEventSource implements EventSource {
 		for (KafkaConsumerWorker worker: workers.values()) {
 			worker.close();
 		}
+	}
+
+	public <T> void subscribeToTopic(String topic, EventHandler<T> handler, Class<T> thing, String consumerGroupId) {
+		KafkaConsumerWorker<T> worker = new KafkaConsumerWorker<>(brokerList, consumerGroupId, topic, "Mr. Hungry", handler, thing);
+		workers.put(topic,worker);
+
+		Executors.newSingleThreadExecutor().submit(worker);
 	}
 }

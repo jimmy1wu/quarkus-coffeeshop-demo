@@ -6,18 +6,13 @@ import static net.mguenther.kafka.junit.ObserveKeyValues.on;
 import static net.mguenther.kafka.junit.SendValues.to;
 import static net.mguenther.kafka.junit.ReadKeyValues.from;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Semaphore;
@@ -29,10 +24,13 @@ import javax.json.bind.JsonbBuilder;
 import kafka.server.KafkaConfig;
 import net.mguenther.kafka.junit.*;
 import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.ConsumerGroupListing;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
+import org.eclipse.jetty.util.LazyList;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,7 +76,23 @@ public class KafkaEventSourceTest {
     }
 
     @Test
-        public void shouldCommitAfterHandlerReturns() throws InterruptedException {
+    public void shouldUseConfiguredConsumerGroupId() throws InterruptedException {
+        testable = new KafkaEventSource(LOCAL_KAFKA_BOOTSTRAP_SERVER);
+        testable.subscribeToTopic(TOPIC_NAME, mock(EventHandler.class), Order.class, "differentConsumer");
+
+        assertThatEventually(() -> {
+                    try {
+                        return adminClient.listConsumerGroups().all().get();
+                    } catch (InterruptedException  | ExecutionException e) {
+                        throw new RuntimeException(e);
+                    }
+                },
+                hasItem(new ConsumerGroupListing("differentConsumer", false)),
+                        Duration.ofSeconds(20));
+    }
+
+    @Test
+    public void shouldCommitAfterHandlerReturns() throws InterruptedException {
         kafkaBroker.createTopic(TopicConfig.forTopic(TOPIC_NAME).useDefaults());
         kafkaBroker.send(to(TOPIC_NAME, EVENT_DATA).useDefaults());
 
@@ -108,9 +122,9 @@ public class KafkaEventSourceTest {
         try {
             committedOffsets = adminClient.listConsumerGroupOffsets("myConsumer").partitionsToOffsetAndMetadata().get();
         } catch (InterruptedException | ExecutionException e) {
-           throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
-        OffsetAndMetadata result = committedOffsets.get(new TopicPartition(topicName,partition));
+        OffsetAndMetadata result = committedOffsets.get(new TopicPartition(topicName, partition));
         if (result == null) {
             return -1L;
         }
@@ -195,7 +209,7 @@ public class KafkaEventSourceTest {
             Thread.sleep(step.toMillis());
             timeRemaining = timeRemaining.minus(step);
         }
-        assertThat(yieldsExpected.get(),matcher);
+        assertThat(yieldsExpected.get(), matcher);
     }
 
     private AdminClient createAdminClient() {
