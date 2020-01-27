@@ -29,6 +29,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.eclipse.jetty.util.LazyList;
+import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
@@ -83,12 +84,21 @@ public class KafkaEventSourceTest {
         assertThatEventually(() -> {
                     try {
                         return adminClient.listConsumerGroups().all().get();
-                    } catch (InterruptedException  | ExecutionException e) {
+                    } catch (InterruptedException | ExecutionException e) {
                         throw new RuntimeException(e);
                     }
                 },
-                hasItem(new ConsumerGroupListing("differentConsumer", false)),
-                        Duration.ofSeconds(20));
+                hasItem(consumerGroupId(is("differentConsumer"))),
+                Duration.ofSeconds(20));
+    }
+
+    private FeatureMatcher<ConsumerGroupListing, String> consumerGroupId(Matcher<String> matcher) {
+        return new FeatureMatcher<ConsumerGroupListing, String>(matcher, "a consumer with group ID", "consumer group ID") {
+            @Override
+            protected String featureValueOf(ConsumerGroupListing group) {
+                return group.groupId();
+            }
+        };
     }
 
     @Test
