@@ -27,7 +27,7 @@ import org.reactivestreams.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ApplicationScoped
+//@ApplicationScoped
 public class ReactiveMessagingBarista {
 
     @Inject

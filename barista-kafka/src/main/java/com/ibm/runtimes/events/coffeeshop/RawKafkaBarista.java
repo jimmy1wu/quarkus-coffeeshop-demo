@@ -27,6 +27,8 @@ public class RawKafkaBarista {
     public RawKafkaBarista(EventEmitter emitter, Executor executor, EventSource source) {
         this.emitter = emitter;
         this.executor = executor;
+        logger.debug("Starting raw kafka barista");
+
         source.subscribeToTopic("orders", this::handleIncomingOrder, Order.class);
         source.subscribeToTopic("queue", this::handleOrderUpdate, PreparationState.class);
     }
