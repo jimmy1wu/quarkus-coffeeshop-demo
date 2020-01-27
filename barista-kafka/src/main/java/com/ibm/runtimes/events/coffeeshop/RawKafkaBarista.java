@@ -24,13 +24,13 @@ public class RawKafkaBarista {
     private Executor executor;
     private Set<Order> completedOrders = Collections.synchronizedSet(new HashSet<Order>());
 
-    public RawKafkaBarista(EventEmitter emitter, Executor executor, EventSource source) {
+    public RawKafkaBarista(EventEmitter emitter, Executor executor, KafkaEventSource source) {
         this.emitter = emitter;
         this.executor = executor;
         logger.debug("Starting raw kafka barista");
 
-        source.subscribeToTopic("orders", this::handleIncomingOrder, Order.class);
-        source.subscribeToTopic("queue", this::handleOrderUpdate, PreparationState.class);
+        source.subscribeToTopic("orders", this::handleIncomingOrder, Order.class, "baristas");
+        source.subscribeToTopic("queue", this::handleOrderUpdate, PreparationState.class, "fredrique");
     }
 
     public void handleIncomingOrder(Order order) {

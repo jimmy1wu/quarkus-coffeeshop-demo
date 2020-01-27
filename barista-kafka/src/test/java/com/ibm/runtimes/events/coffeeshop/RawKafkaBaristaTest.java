@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 public class RawKafkaBaristaTest {
 
-    private EventSource source = mock(EventSource.class);
+    private KafkaEventSource source = mock(KafkaEventSource.class);
 
     private Order order;
 
@@ -29,17 +29,12 @@ public class RawKafkaBaristaTest {
     }
 
     @Test
-    public void shouldSubscribeToOrdersTopicUsingEventSource() {
+    public void shouldSubscribeToTopicsUsingEventSource() {
        new RawKafkaBarista(null, new SynchronousExecutor(), source);
-        
-        verify(source).subscribeToTopic(eq("orders"), any(EventHandler.class), eq(Order.class));
-    }
 
-    @Test
-    public void shouldSubscribeToQueueTopicUsingEventSource() {
-       new RawKafkaBarista(null, new SynchronousExecutor(), source);
-        
-        verify(source).subscribeToTopic(eq("queue"), any(EventHandler.class), eq(PreparationState.class));
+        verify(source).subscribeToTopic(eq("orders"), any(EventHandler.class), eq(Order.class), eq("baristas"));
+        verify(source).subscribeToTopic(eq("queue"), any(EventHandler.class), eq(PreparationState.class), eq("fredrique"));
+
     }
 
     @Test
