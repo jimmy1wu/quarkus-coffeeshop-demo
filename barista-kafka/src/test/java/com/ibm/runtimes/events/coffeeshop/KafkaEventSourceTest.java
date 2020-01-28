@@ -58,6 +58,9 @@ public class KafkaEventSourceTest {
         if (testable != null) {
             testable.close();
         }
+        if (adminClient != null) {
+            adminClient.close();
+        }
         kafkaBroker.stop();
     }
 
@@ -117,6 +120,8 @@ public class KafkaEventSourceTest {
                 throw new RuntimeException(e);
             }
         }, Order.class);
+
+        kafkaBroker.observeValues(on(TOPIC_NAME,1).useDefaults());
 
         // Before we allow the handler function to complete, there should be no committed offset
         assertThat(getCommittedOffset(TOPIC_NAME, 0), is(equalTo(-1L)));
