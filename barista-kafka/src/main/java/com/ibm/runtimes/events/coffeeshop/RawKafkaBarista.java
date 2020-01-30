@@ -1,5 +1,6 @@
 package com.ibm.runtimes.events.coffeeshop;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,13 +39,13 @@ public class RawKafkaBarista {
             logger.debug("Order " + order.getOrderId() + " has already been completed, skipping");
         } else {
             logger.debug("Barista Fred has received order " + order.getOrderId());
-            makeIt(order).thenApply(beverage -> PreparationState.ready(order, beverage)).thenAccept(result -> {
-                try {
-                    emitter.sendEvent(result);
-                } catch (InterruptedException | ExecutionException e) {
-                    logger.error("Failed to emit event",e);
-                }
-            });
+            Beverage beverage = makeIt(order);
+            try {
+                emitter.sendEvent(PreparationState.ready(order, beverage));
+            } catch (InterruptedException | ExecutionException e) {
+                logger.error("Failed to emit event",e);
+            }
+
         }
     }
 
@@ -54,18 +55,16 @@ public class RawKafkaBarista {
         }
     }
 
-    private CompletionStage<Beverage> makeIt(Order order) {
-        return CompletableFuture.supplyAsync(() -> {
-            prepareCoffee();
-            logger.debug("Order " + order.getOrderId() + " completed");
-            completedOrders.add(order);
-            return new Beverage(order, "Fred");
-        }, executor);
+    private Beverage makeIt(Order order) {
+        prepareCoffee();
+        logger.debug("Order " + order.getOrderId() + " completed");
+        completedOrders.add(order);
+        return new Beverage(order, "Fred");
     }
 
     private void prepareCoffee() {
         try {
-            Thread.sleep(10);
+            Thread.sleep(Duration.ofSeconds(5).toMillis());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
