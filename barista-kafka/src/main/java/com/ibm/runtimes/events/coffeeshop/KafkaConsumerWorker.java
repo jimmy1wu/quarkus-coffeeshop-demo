@@ -28,7 +28,7 @@ public class KafkaConsumerWorker<T> implements Runnable, ConsumerRebalanceListen
 
     public KafkaConsumerWorker(String bootstrapServer, String consumerGroupId, String topic, String consumerName,
             EventHandler<T> handler, Class<T> eventType) {
-        this.consumerName = consumerName;
+        this.consumerName = consumerGroupId;
         this.handler = handler;
         this.eventType = eventType;
         this.topic = topic;

@@ -30,17 +30,17 @@ public class RawKafkaBaristaTest {
 
     @Test
     public void shouldSubscribeToTopicsUsingEventSource() {
-       new RawKafkaBarista(null, new SynchronousExecutor(), source);
+       new RawKafkaBarista(null, new SynchronousExecutor(), source, "Fred");
 
         verify(source).subscribeToTopic(eq("orders"), any(EventHandler.class), eq(Order.class), eq("baristas"));
-        verify(source).subscribeToTopic(eq("queue"), any(EventHandler.class), eq(PreparationState.class), eq("fredrique"));
+        verify(source).subscribeToTopic(eq("queue"), any(EventHandler.class), eq(PreparationState.class), eq("Fred"));
 
     }
 
     @Test
     public void shouldMakeCoffee() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
-        RawKafkaBarista barista = new RawKafkaBarista(emitter, new SynchronousExecutor(), source);
+        RawKafkaBarista barista = new RawKafkaBarista(emitter, new SynchronousExecutor(), source, "Fred");
 
         barista.handleIncomingOrder(order);
 
@@ -50,7 +50,7 @@ public class RawKafkaBaristaTest {
     @Test
     public void shouldOnlyPrepareOrderOnceGivenMultipleOrderMessages() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
-        RawKafkaBarista barista = new RawKafkaBarista(emitter, new SynchronousExecutor(), source);
+        RawKafkaBarista barista = new RawKafkaBarista(emitter, new SynchronousExecutor(), source, "Fred");
 
         barista.handleIncomingOrder(order);
         barista.handleIncomingOrder(order);
@@ -61,7 +61,7 @@ public class RawKafkaBaristaTest {
     @Test
     public void shouldNotPrepareOrderIfSomeoneElsePreparedItAlready() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
-        RawKafkaBarista barista = new RawKafkaBarista(emitter, new SynchronousExecutor(), source);
+        RawKafkaBarista barista = new RawKafkaBarista(emitter, new SynchronousExecutor(), source, "Fred");
        
         Beverage beverage = new Beverage();
         beverage.setBeverage(order.getProduct());
@@ -76,6 +76,28 @@ public class RawKafkaBaristaTest {
 
         barista.handleOrderUpdate(result);
         barista.handleIncomingOrder(order);
+
+        verify(emitter, never()).sendEvent("{\"beverage\":{\"beverage\":\"espresso\",\"customer\":\"Demo-1\",\"orderId\":\"22929b18-9116-4125-8141-07855b992219\",\"preparedBy\":\"Fred\"},\"order\":{\"name\":\"Demo-1\",\"orderId\":\"22929b18-9116-4125-8141-07855b992219\",\"product\":\"espresso\"},\"state\":\"READY\"}");
+    }
+
+    @Test
+    public void shouldDitchOrderIfSomeoneElsePreparedItAfterStarting() throws InterruptedException, ExecutionException {
+        EventEmitter emitter = mock(EventEmitter.class);
+        RawKafkaBarista barista = new RawKafkaBarista(emitter, new SynchronousExecutor(), source, "Fred");
+
+        Beverage beverage = new Beverage();
+        beverage.setBeverage(order.getProduct());
+        beverage.setCustomer(order.getName());
+        beverage.setPreparedBy("Joe");
+        beverage.setOrderId(order.getOrderId());
+
+        PreparationState result = new PreparationState();
+        result.setBeverage(beverage);
+        result.setOrder(order);
+        result.setState(State.READY);
+
+        barista.handleIncomingOrder(order);
+        barista.handleOrderUpdate(result);
 
         verify(emitter, never()).sendEvent("{\"beverage\":{\"beverage\":\"espresso\",\"customer\":\"Demo-1\",\"orderId\":\"22929b18-9116-4125-8141-07855b992219\",\"preparedBy\":\"Fred\"},\"order\":{\"name\":\"Demo-1\",\"orderId\":\"22929b18-9116-4125-8141-07855b992219\",\"product\":\"espresso\"},\"state\":\"READY\"}");
     }

@@ -15,9 +15,13 @@ public class RawKafkaBaristaBoostrap {
     @ConfigProperty(name = "mp.messaging.connector.liberty-kafka.bootstrap.servers")
     String kafkaBootstrapServer;
 
+    @Inject
+    @ConfigProperty(name = "barista.name")
+    String baristaName;
+
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
         KafkaEventEmitter emitter = new KafkaEventEmitter(kafkaBootstrapServer, "queue");
         KafkaEventSource source = new KafkaEventSource(kafkaBootstrapServer);
-        new RawKafkaBarista(emitter, Executors.newSingleThreadExecutor(), source );
+        new RawKafkaBarista(emitter, Executors.newSingleThreadExecutor(), source, baristaName);
     }
 }
