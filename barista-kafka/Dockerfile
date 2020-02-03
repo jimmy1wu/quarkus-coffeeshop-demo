@@ -16,7 +16,7 @@ COPY barista-kafka/src /project/barista-kafka/src
 RUN mvn -q -f barista-kafka/pom.xml package
 
 ## Create Image
-FROM open-liberty
+FROM  openliberty/open-liberty:19.0.0.12-full-java8-openj9-ubi
 
 COPY --from=build --chown=1001:0 /project/barista-kafka/target/barista-kafka-1.0-SNAPSHOT.war /opt/ol/wlp/usr/servers/defaultServer/apps
 COPY --from=build --chown=1001:0 /project/barista-kafka/src/main/liberty/config/server.xml /opt/ol/wlp/usr/servers/defaultServer

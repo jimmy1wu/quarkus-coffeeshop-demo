@@ -38,4 +38,4 @@ spec:
           - name: KAFKA_HOST
             value: "{{ .Values.kafka.bootstrap.service }}.{{ .Values.kafka.namespace }}:{{ .Values.kafka.bootstrap.port }}"
         command: ["/bin/sh"]
-        args: ["-c", "/opt/ol/wlp/bin/server run defaultServer -Dmp.messaging.incoming.completed.group.id=`bash /tmp/barista-name.sh` -Dmp.messaging.connector.liberty-kafka.bootstrap.servers=$(KAFKA_HOST)"]
+        args: ["-c", "/opt/ol/wlp/bin/server run defaultServer -Dbarista.name=`bash /tmp/barista-name.sh` -Dmp.messaging.connector.liberty-kafka.bootstrap.servers=$(KAFKA_HOST)"]
