@@ -44,10 +44,11 @@ public class RawKafkaBarista {
                 logger.info("Someone else has now prepared order " + order.getOrderId() +" - I'll throw it away.");
                 return;
             }
+            completedOrders.add(order);
             try {
                 emitter.sendEvent(PreparationState.ready(order, beverage));
             } catch (InterruptedException | ExecutionException e) {
-                logger.error("Failed to emit event",e);
+                logger.error("Failed to emit event", e);
             }
 
         }
@@ -62,7 +63,6 @@ public class RawKafkaBarista {
     private Beverage makeIt(Order order) {
         prepareCoffee();
         logger.debug("Order " + order.getOrderId() + " completed");
-        completedOrders.add(order);
         return new Beverage(order, baristaName);
     }
 

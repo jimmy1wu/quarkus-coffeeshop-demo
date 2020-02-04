@@ -6,8 +6,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
+import java.time.Duration;
+import java.util.concurrent.*;
 
 import com.ibm.runtimes.events.coffeeshop.PreparationState.State;
 
@@ -83,7 +83,7 @@ public class RawKafkaBaristaTest {
     @Test
     public void shouldDitchOrderIfSomeoneElsePreparedItAfterStarting() throws InterruptedException, ExecutionException {
         EventEmitter emitter = mock(EventEmitter.class);
-        RawKafkaBarista barista = new RawKafkaBarista(emitter, new SynchronousExecutor(), source, "Fred");
+        RawKafkaBarista barista = new RawKafkaBarista(emitter, Executors.newSingleThreadExecutor(), source, "Fred");
 
         Beverage beverage = new Beverage();
         beverage.setBeverage(order.getProduct());
@@ -96,8 +96,15 @@ public class RawKafkaBaristaTest {
         result.setOrder(order);
         result.setState(State.READY);
 
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            barista.handleOrderUpdate(result);
+        });
         barista.handleIncomingOrder(order);
-        barista.handleOrderUpdate(result);
 
         verify(emitter, never()).sendEvent("{\"beverage\":{\"beverage\":\"espresso\",\"customer\":\"Demo-1\",\"orderId\":\"22929b18-9116-4125-8141-07855b992219\",\"preparedBy\":\"Fred\"},\"order\":{\"name\":\"Demo-1\",\"orderId\":\"22929b18-9116-4125-8141-07855b992219\",\"product\":\"espresso\"},\"state\":\"READY\"}");
     }
