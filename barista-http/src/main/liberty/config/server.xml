@@ -6,9 +6,9 @@
     <feature>mpConfig-1.3</feature>
   </featureManager>
 
-  <httpEndpoint httpPort="8082" id="defaultHttpEndpoint" host="*" />
-
-  <webApplication location="barista-http-1.0-SNAPSHOT.war" contextRoot="/">
+  <httpEndpoint host="*" httpPort="8082"
+                id="defaultHttpEndpoint"/>
+  <webApplication location="barista-http.war" contextRoot="/">
 
   </webApplication>
 
