@@ -1,0 +1,2 @@
+project-name: coffeeshop-service-appsody
+stack: docker.io/appsody/java-openliberty:0.1
